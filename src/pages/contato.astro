@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import Pendente from '../components/Pendente.astro';
+import AvaliarGoogle from '../components/AvaliarGoogle.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+import { empresa, whatsappLink, mensagemPadrao } from '../lib/empresa';
+
+const { endereco: e, contatos: c, redes } = empresa;
+const nomesRedes: Record<string, string> = {
+	facebook: 'Facebook',
+	instagram: 'Instagram',
+	youtube: 'YouTube',
+	linkedin: 'LinkedIn',
+	pinterest: 'Pinterest',
+	twitter: 'Twitter',
+};
+const listaRedes = Object.entries(nomesRedes).flatMap(([k, nome]) => {
+	const url = (redes as Record<string, string | null>)[k];
+	return url ? [[nome, url] as [string, string]] : [];
+});
+const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`;
+---
+
+<Base
+	titulo="Contato"
+	descricao="Telefone, WhatsApp, e-mail, endereço e redes sociais da Escadas Munarim em São José, SC."
+>
+	<section class="wrap py-16 grid gap-10 max-w-3xl">
+		<div class="grid gap-5 justify-items-start">
+			<h1>Contato</h1>
+			<p class="text-lg max-w-xl">
+				O caminho mais rápido é o WhatsApp: envie as medidas do espaço e receba o orçamento.
+			</p>
+			<CtaWhatsapp />
+		</div>
+
+		<div class="grid gap-3">
+			<h2 class="text-3xl">Fale com a gente</h2>
+			<ul class="grid gap-2">
+				<li>
+					WhatsApp vendas:{' '}
+					<a
+						class="link whitespace-nowrap"
+						href={whatsappLink(mensagemPadrao)}
+						rel="noopener"
+					>
+						{c.whatsapp.valor}
+					</a>
+				</li>
+				<li>
+					WhatsApp atendimento geral:{' '}
+					<a
+						class="link whitespace-nowrap"
+						href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)}
+						rel="noopener"
+					>
+						{c.whatsappAtendimento.valor}
+					</a>
+				</li>
+				<li>
+					Telefone (financeiro):{' '}
+					<a
+						class="link whitespace-nowrap"
+						href={`tel:+55${c.telefone.valor.replace(/\D/g, '')}`}
+					>
+						{c.telefone.valor}
+					</a>
+				</li>
+				{c.email.confirmado && (
+					<li>
+						E-mail:{' '}
+						<a class="link" href={`mailto:${c.email.valor}`}>
+							{c.email.valor}
+						</a>
+					</li>
+				)}
+			</ul>
+		</div>
+
+		<div class="grid gap-3">
+			<h2 class="text-3xl">Onde estamos</h2>
+			<p>{enderecoTexto}</p>
+			<p>Horário: {c.horario ?? <Pendente texto="horário de atendimento" />}</p>
+			<div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+				<a class="link" href={redes.mapa} rel="noopener">
+					Ver no mapa
+				</a>
+				<button type="button" class="btn btn-ghost btn-sm" data-copiar={enderecoTexto}>
+					Copiar endereço
+				</button>
+				<span
+					class="text-sm text-muted"
+					role="status"
+					aria-live="polite"
+					data-copiado
+				></span>
+			</div>
+		</div>
+
+		<div class="grid gap-3">
+			<h2 class="text-3xl">Redes sociais</h2>
+			<ul class="flex flex-wrap gap-x-5 gap-y-2">
+				{listaRedes.map(([nome, url]) => (
+					<li>
+						<a class="link" href={url} rel="noopener">
+							{nome}
+						</a>
+					</li>
+				))}
+			</ul>
+		</div>
+
+		<AvaliarGoogle />
+
+		<Pendente texto="e-mail ainda não confirmado pela empresa (conteudo/empresa.json)" />
+	</section>
+</Base>
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>('[data-copiar]').forEach((b) => {
+		const aviso = b.parentElement?.querySelector<HTMLElement>('[data-copiado]');
+		b.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(b.dataset.copiar ?? '');
+				if (aviso) aviso.textContent = 'Endereço copiado.';
+			} catch {
+				if (aviso) aviso.textContent = 'Não foi possível copiar.';
+			}
+			setTimeout(() => {
+				if (aviso) aviso.textContent = '';
+			}, 2500);
+		});
+	});
+</script>

@@ -1,0 +1,7 @@
+---
+// Marcador visível só em desenvolvimento. Em produção não renderiza nada.
+import { mostrarPendentes } from '../lib/empresa';
+const { texto = 'PENDENTE' } = Astro.props;
+---
+
+{mostrarPendentes && <span class="pendente">[{texto}]</span>}

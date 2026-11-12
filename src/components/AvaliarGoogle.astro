@@ -1,0 +1,19 @@
+---
+import Pendente from './Pendente.astro';
+import { empresa } from '../lib/empresa';
+const url = (empresa.redes as Record<string, string | null>).avaliarGoogle;
+---
+
+{url ? (
+	<div class="grid gap-3 max-w-xl">
+		<h2>Já comprou com a gente?</h2>
+		<p>Sua avaliação no Google ajuda outras pessoas a nos encontrar e nos ajuda a melhorar.</p>
+		<div>
+			<a class="btn btn-ghost" href={url} rel="noopener" target="_blank">
+				Avaliar a Escadas Munarim no Google
+			</a>
+		</div>
+	</div>
+) : (
+	<Pendente texto="link de avaliação do Google (conteudo/empresa.json, redes.avaliarGoogle)" />
+)}

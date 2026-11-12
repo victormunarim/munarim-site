@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Pendente from '../components/Pendente.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+---
+
+<Base
+	titulo="Perguntas frequentes"
+	descricao="Perguntas frequentes sobre escadas pré-moldadas de concreto da Escadas Munarim."
+>
+	<section class="wrap py-16 grid gap-5 max-w-3xl">
+		<h1>Perguntas frequentes</h1>
+		<p class="text-lg text-muted">
+			Estamos reunindo as respostas. Enquanto isso, tire sua dúvida direto pelo WhatsApp.
+		</p>
+		<div>
+			<CtaWhatsapp />
+		</div>
+		<Pendente texto="perguntas e respostas confirmadas, de conteudo/faq.md" />
+	</section>
+</Base>

@@ -1,0 +1,8 @@
+export default {
+	useTabs: true,
+	tabWidth: 4,
+	singleQuote: true,
+	printWidth: 100,
+	plugins: ['prettier-plugin-astro'],
+	overrides: [{ files: '*.astro', options: { parser: 'astro' } }],
+};

@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import Pendente from '../components/Pendente.astro';
+---
+
+<Base
+	titulo="Política de privacidade"
+	descricao="Como a Escadas Munarim trata os dados enviados pelo site."
+>
+	<section class="wrap py-16 grid gap-4 max-w-3xl">
+		<h1>Política de privacidade</h1>
+		<p class="text-muted">
+			Os dados do formulário de orçamento são usados só para responder ao pedido.{' '}
+			<Pendente texto="texto final revisado (finalidade, retenção, contato do responsável)" />
+		</p>
+	</section>
+</Base>

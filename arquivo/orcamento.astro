@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import { whatsappLink, mensagemPadrao } from '../lib/empresa';
+
+const wa = whatsappLink(mensagemPadrao);
+// Chave pública do Cloudflare Turnstile (definir em .env como PUBLIC_TURNSTILE_SITEKEY).
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
+---
+
+<Base
+	titulo="Pedir orçamento"
+	descricao="Peça um orçamento de escada pré-moldada de concreto pelo WhatsApp ou pelo formulário."
+>
+	<section class="wrap py-16 max-w-2xl">
+		<h1 class="text-4xl font-bold tracking-tight">Pedir orçamento</h1>
+		<p class="text-muted mt-3">O jeito mais rápido é o WhatsApp.</p>
+		<a class="btn mt-6" href={wa} rel="noopener">
+			Pedir orçamento no WhatsApp
+		</a>
+
+		<h2 class="text-2xl font-bold mt-12">Ou envie pelo formulário</h2>
+		<form
+			id="form-orcamento"
+			class="grid gap-4 mt-6"
+			method="post"
+			action="/api/orcamento"
+			novalidate
+		>
+			<label class="grid gap-1">
+				Nome
+				<input
+					class="border border-line rounded-ui p-3 bg-surface"
+					name="nome"
+					required
+					autocomplete="name"
+				/>
+				<span class="erro text-sm text-red-700" data-for="nome"></span>
+			</label>
+			<label class="grid gap-1">
+				WhatsApp
+				<input
+					class="border border-line rounded-ui p-3 bg-surface"
+					name="whatsapp"
+					required
+					inputmode="tel"
+					autocomplete="tel"
+				/>
+				<span class="erro text-sm text-red-700" data-for="whatsapp"></span>
+			</label>
+			<label class="grid gap-1">
+				Cidade
+				<input
+					class="border border-line rounded-ui p-3 bg-surface"
+					name="cidade"
+					required
+				/>
+				<span class="erro text-sm text-red-700" data-for="cidade"></span>
+			</label>
+			<label class="grid gap-1">
+				Tipo de obra
+				<select class="border border-line rounded-ui p-3 bg-surface" name="tipo">
+					<option value="residencial">Residencial</option>
+					<option value="construtora">Construtora</option>
+					<option value="comercial">Comercial</option>
+				</select>
+			</label>
+			<label class="grid gap-1">
+				Mensagem
+				<textarea
+					class="border border-line rounded-ui p-3 bg-surface"
+					name="mensagem"
+					rows="4"
+				></textarea>
+			</label>
+			<!-- honeypot: humanos não veem -->
+			<input
+				type="text"
+				name="empresa_site"
+				tabindex="-1"
+				autocomplete="off"
+				class="hidden"
+				aria-hidden="true"
+			/>
+			{sitekey && <div class="cf-turnstile" data-sitekey={sitekey}></div>}
+			<label class="flex gap-2 items-start text-sm">
+				<input type="checkbox" name="lgpd" required class="mt-1" />
+				<span>
+					Concordo com o uso dos meus dados para responder ao pedido, conforme a{' '}
+					<a class="link" href="/politica-de-privacidade">
+						política de privacidade
+					</a>
+					.
+				</span>
+			</label>
+			<button class="btn w-fit" type="submit">
+				Enviar pedido
+			</button>
+			<p id="status" role="status" class="text-sm"></p>
+		</form>
+	</section>
+
+	{sitekey && (
+		<script
+			is:inline
+			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+			async
+			defer
+		></script>
+	)}
+	<script>
+		const form = document.getElementById('form-orcamento') as HTMLFormElement;
+		const status = document.getElementById('status')!;
+		form.addEventListener('submit', async (ev) => {
+			ev.preventDefault();
+			form.querySelectorAll('.erro').forEach((e) => (e.textContent = ''));
+			const dados = new FormData(form);
+			const faltando = ['nome', 'whatsapp', 'cidade'].filter(
+				(c) => !String(dados.get(c) ?? '').trim(),
+			);
+			if (faltando.length) {
+				faltando.forEach((c) => {
+					const alvo = form.querySelector(`.erro[data-for="${c}"]`);
+					if (alvo) alvo.textContent = 'Preencha este campo.';
+				});
+				return;
+			}
+			status.textContent = 'Enviando...';
+			try {
+				const r = await fetch('/api/orcamento', { method: 'POST', body: dados });
+				if (!r.ok) throw new Error(String(r.status));
+				status.textContent = 'Pedido enviado. Entraremos em contato.';
+				form.reset();
+			} catch {
+				status.textContent = 'Não foi possível enviar. Use o botão do WhatsApp acima.';
+			}
+		});
+	</script>
+</Base>

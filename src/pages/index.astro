@@ -1,0 +1,163 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Pendente from '../components/Pendente.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+import AvaliarGoogle from '../components/AvaliarGoogle.astro';
+import Carrossel from '../components/Carrossel.astro';
+import { publicavel } from '../lib/empresa';
+
+const modelos = publicavel(await getCollection('modelos'));
+const fotosCarrossel = (await getCollection('modelos')).flatMap((m) =>
+	m.data.fotos.map((src) => ({ src, nome: m.data.nome })),
+);
+
+// Descrições só do que o cliente faz ou do que já está confirmado (fábrica em São José, pré-moldado de concreto).
+const etapas = [
+	{
+		nome: 'Medição',
+		texto: 'Tudo parte do seu espaço: altura entre pisos, largura e comprimento do vão.',
+	},
+	{ nome: 'Projeto', texto: 'Com as medidas, definimos o modelo e o dimensionamento da escada.' },
+	{
+		nome: 'Fabricação',
+		texto: 'Escada pré-moldada de concreto, produzida na fábrica em São José, SC.',
+	},
+	{
+		nome: 'Entrega',
+		texto: 'Prazo e forma de entrega para a sua cidade ficam combinados no orçamento.',
+	},
+	{
+		nome: 'Montagem',
+		texto: 'Pergunte, ao pedir o orçamento, como fica a montagem no seu local.',
+	},
+];
+---
+
+<Base
+	titulo="Empresa de escadas de concreto em São José, SC | Munarim"
+	descricao="Escadas Munarim, empresa de escadas pré-moldadas de concreto sob medida em São José, SC. Envie as medidas do seu espaço e receba o orçamento pelo WhatsApp."
+>
+	<section class="hero">
+		<div class="wrap min-h-[56vh] md:min-h-[64vh] grid content-center gap-6 py-14 md:py-20 relative z-10">
+			<h1 class="max-w-3xl md:max-w-[58%]">
+				Escadas pré&#8209;moldadas de concreto sob medida
+			</h1>
+			<p class="text-lg muted max-w-lg md:max-w-[50%]">
+				A Escadas Munarim é uma empresa de escadas em São José, SC. Envie as medidas do seu
+				espaço e receba o orçamento pelo WhatsApp.
+				<Pendente texto="fato confirmado: anos de mercado" />
+			</p>
+			<div class="flex flex-wrap items-center gap-4">
+				<CtaWhatsapp />
+				<a class="link" href="#como-funciona">
+					Ver como funciona
+				</a>
+			</div>
+			<Pendente texto="foto de hero" />
+		</div>
+	</section>
+
+	{modelos.length > 0 && (
+		<section id="modelos" class="wrap pt-16 scroll-mt-20">
+			<div class="flex flex-wrap items-end justify-between gap-4">
+				<h2>Modelos</h2>
+				<a class="link" href="/escadas">
+					Ver todos os modelos
+				</a>
+			</div>
+			<div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-4">
+				{modelos.map((m) => (
+					<a class="card p-5 grid gap-2" href={`/escadas/${m.data.slug}`}>
+						<h3 class="text-2xl">{m.data.nome}</h3>
+						{m.data.resumo ? (
+							<p class="text-sm text-muted">{m.data.resumo}</p>
+						) : (
+							<Pendente texto="resumo e foto" />
+						)}
+					</a>
+				))}
+			</div>
+		</section>
+	)}
+
+	{fotosCarrossel.length > 0 && (
+		<section id="fotos" class="wrap pt-16 scroll-mt-20">
+			<div class="flex items-end justify-between gap-4 mb-6">
+				<h2 class="text-3xl">Escadas que já instalamos</h2>
+				<a class="link" href="/fotos">
+					Ver todas ({fotosCarrossel.length})
+				</a>
+			</div>
+		</section>
+	)}
+	{fotosCarrossel.length > 0 && (
+		<>
+			<div class="pt-2">
+				<Carrossel fotos={fotosCarrossel} verTodas="/fotos" />
+			</div>
+			<div class="wrap pt-6">
+				<CtaWhatsapp rotulo="Quero uma escada assim" />
+			</div>
+		</>
+	)}
+
+	<section id="como-funciona" class="wrap pt-20 scroll-mt-20">
+		<h2>Como funciona</h2>
+		<ol class="grid gap-x-6 gap-y-8 mt-10 sm:grid-cols-2 lg:grid-cols-5 lg:items-start">
+			{etapas.map((e, i) => (
+				<li class="etapa" style={`--i:${i}`}>
+					<span class="etapa-n" aria-hidden="true">
+						{i + 1}
+					</span>
+					<h3 class="text-2xl mt-2">{e.nome}</h3>
+					<p class="text-muted mt-2 text-base">{e.texto}</p>
+				</li>
+			))}
+		</ol>
+	</section>
+
+	<section class="wrap pt-20" aria-labelledby="pedido">
+		<div class="card p-6 md:p-10 grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
+			<div class="grid gap-4">
+				<h2 id="pedido">Para pedir o orçamento, tenha em mãos</h2>
+				<ul class="grid gap-2 list-disc pl-5 max-w-prose">
+					<li>Altura entre o piso de baixo e o de cima.</li>
+					<li>Largura e comprimento do vão onde a escada vai ficar.</li>
+					<li>Uma foto do local e a cidade da obra.</li>
+				</ul>
+			</div>
+			<div class="grid gap-3 md:justify-items-end">
+				<CtaWhatsapp />
+				<p class="text-sm text-muted">
+					Resposta no horário comercial: segunda a sexta, 7h30 às 17h30.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="wrap pt-20">
+		<AvaliarGoogle />
+	</section>
+</Base>
+
+<script>
+	// Etapas aparecem em sequência ao entrar na tela; sem JS ficam visíveis.
+	const etapas = document.querySelectorAll<HTMLElement>('.etapa');
+	if ('IntersectionObserver' in window) {
+		const obs = new IntersectionObserver(
+			(entradas) =>
+				entradas.forEach((e) => {
+					if (!e.isIntersecting) return;
+					e.target.classList.remove('etapa--antes');
+					obs.unobserve(e.target);
+				}),
+			{ threshold: 0.2 },
+		);
+		etapas.forEach((el) => {
+			if (el.getBoundingClientRect().top < window.innerHeight) return;
+			el.classList.add('etapa--antes');
+			obs.observe(el);
+		});
+	}
+</script>

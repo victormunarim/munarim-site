@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+
+const modelos = await getCollection('modelos');
+const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.data.nome })));
+---
+
+<Base
+	titulo="Fotos de escadas de concreto pré-moldadas"
+	descricao="Fotos de escadas de concreto pré-moldadas instaladas: caracol, reta, viga central e outros modelos."
+>
+	<section class="wrap pt-16 pb-2">
+		<h1>Escadas que já instalamos</h1>
+	</section>
+	<section class="wrap py-16">
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			{fotos.map((f) => (
+				<figure>
+					<img
+						class="w-full aspect-[4/3] object-cover rounded"
+						src={f.src}
+						alt={`Escada ${f.nome} instalada`}
+						width="800"
+						height="600"
+						loading="lazy"
+					/>
+					<figcaption class="text-sm text-muted mt-1">{f.nome}</figcaption>
+				</figure>
+			))}
+		</div>
+		<div class="mt-10">
+			<CtaWhatsapp />
+		</div>
+	</section>
+</Base>

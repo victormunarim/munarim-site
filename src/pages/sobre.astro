@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import Pendente from '../components/Pendente.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+import { empresa } from '../lib/empresa';
+
+const e = empresa.endereco;
+const { instagram, youtube } = empresa.redes;
+---
+
+<Base
+	titulo="Sobre a Escadas Munarim"
+	descricao="Fabricante de escadas pré-moldadas de concreto sob medida em São José, SC."
+>
+	<section class="wrap py-16 grid gap-6 max-w-3xl">
+		<h1>Sobre a Escadas Munarim</h1>
+		<p class="text-lg">
+			Fabricamos escadas pré-moldadas de concreto sob medida, com produção própria em São
+			José, SC. Cada escada parte das medidas do seu espaço: você nos envia, e indicamos o
+			modelo certo.
+		</p>
+		<p class="text-muted">
+			<Pendente texto="história, anos de mercado, fábrica e equipe, confirmados" />
+		</p>
+
+		<div class="grid gap-3 mt-4">
+			<h2>Venha conhecer</h2>
+			<p>
+				{e.rua}, {e.bairro}
+				<br />
+				{e.cidade}/{e.uf}, CEP {e.cep}
+				<br />
+				{empresa.contatos.horario}
+			</p>
+			<p>
+				Veja nosso trabalho no{' '}
+				<a class="link" href={instagram} rel="noopener">
+					Instagram
+				</a>{' '}
+				e no{' '}
+				<a class="link" href={youtube} rel="noopener">
+					YouTube
+				</a>
+				.
+			</p>
+		</div>
+
+		<div class="flex flex-wrap items-center gap-4 mt-2">
+			<CtaWhatsapp />
+			<a class="link" href="/contato">
+				Outras formas de contato
+			</a>
+		</div>
+	</section>
+</Base>

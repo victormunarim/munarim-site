@@ -1,0 +1,92 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Pendente from '../../components/Pendente.astro';
+import CtaWhatsapp from '../../components/CtaWhatsapp.astro';
+import { publicavel, mensagemModelo } from '../../lib/empresa';
+
+export async function getStaticPaths() {
+	const modelos = publicavel(await getCollection('modelos'));
+	return modelos.map((m) => ({ params: { slug: m.data.slug }, props: { modelo: m } }));
+}
+
+const { modelo } = Astro.props;
+const d = modelo.data;
+const { Content } = await render(modelo);
+---
+
+<Base
+	titulo={`Escada ${d.nome} de concreto pré-moldada`}
+	descricao={
+		d.resumo ||
+		`Escada ${d.nome} pré-moldada de concreto sob medida, fabricada em São José, SC. Peça o orçamento pelo WhatsApp.`
+	}
+>
+	<section class="wrap py-16 grid gap-6">
+		<a class="link w-fit text-sm" href="/escadas">
+			← Todos os modelos
+		</a>
+		<h1>Escada {d.nome}</h1>
+		{d.resumo ? (
+			<p class="text-lg text-muted max-w-xl">{d.resumo}</p>
+		) : (
+			<Pendente texto="resumo" />
+		)}
+		<div>
+			<CtaWhatsapp
+				mensagem={mensagemModelo(d.nome)}
+				rotulo={`Pedir orçamento da ${d.nome}`}
+			/>
+		</div>
+	</section>
+
+	{d.foto_principal && (
+		<section class="wrap pb-16">
+			<img
+				class="w-full max-h-[70vh] object-cover rounded"
+				src={d.foto_principal}
+				alt={`Escada ${d.nome} de concreto pré-moldada`}
+				loading="eager"
+			/>
+		</section>
+	)}
+
+	{d.fotos.length > 1 && (
+		<section class="wrap pb-16">
+			<h2 class="text-3xl">Fotos</h2>
+			<div class="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
+				{d.fotos.map((f) => (
+					<img
+						class="w-full aspect-[4/3] object-cover rounded"
+						src={f}
+						alt={`Escada ${d.nome} instalada`}
+						loading="lazy"
+					/>
+				))}
+			</div>
+		</section>
+	)}
+
+	<section class="wrap pb-16 grid gap-6 md:grid-cols-2">
+		<div>
+			<h2 class="text-3xl">Medidas</h2>
+			{d.medidas ? <p class="mt-2">{d.medidas}</p> : <Pendente texto="medidas" />}
+		</div>
+		<div>
+			<h2 class="text-3xl">Acabamentos</h2>
+			{d.acabamentos.length ? (
+				<ul class="mt-2 list-disc pl-5">
+					{d.acabamentos.map((a) => (
+						<li>{a}</li>
+					))}
+				</ul>
+			) : (
+				<Pendente texto="acabamentos" />
+			)}
+		</div>
+	</section>
+
+	<section class="wrap pb-16 prose max-w-2xl">
+		<Content />
+	</section>
+</Base>

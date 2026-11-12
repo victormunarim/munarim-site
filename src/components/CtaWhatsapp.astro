@@ -1,0 +1,13 @@
+---
+import { whatsappLink, mensagemPadrao } from '../lib/empresa';
+const {
+	mensagem = mensagemPadrao,
+	rotulo = 'Pedir orçamento pelo WhatsApp',
+	grande = true,
+	class: classe = '',
+} = Astro.props;
+---
+
+<a href={whatsappLink(mensagem)} class:list={['btn', grande && 'btn-lg', classe]} rel="noopener">
+	{rotulo}
+</a>

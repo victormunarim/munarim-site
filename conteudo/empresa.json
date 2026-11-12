@@ -1,0 +1,70 @@
+{
+  "_aviso": "avaliarGoogle: cole aqui o link de avaliação do Perfil da Empresa (https://search.google.com/local/writereview?placeid=SEU_PLACE_ID, ou o link curto g.page/r/.../review). Telefone, WhatsApps, redes, mapa e endereço vieram do Linktree oficial da empresa e do ponto dela no Google Maps e estão confirmados. CNPJ, fundação e e-mail vieram da internet (Serasa, Econodata, AECweb) e NÃO foram validados. Valor null = pendente.",
+  "razaoSocial": "Fabricação e Comércio de Escadas Munarim Ltda",
+  "nomeFantasia": "Escadas Munarim",
+  "cnpj": {
+    "valor": "08.689.875/0001-54",
+    "confirmado": false
+  },
+  "fundacao": {
+    "ano": 2009,
+    "confirmado": false
+  },
+  "endereco": {
+    "rua": "Rua Ervino Schmitt, 115",
+    "bairro": "Sertão do Maruim",
+    "cidade": "São José",
+    "uf": "SC",
+    "cep": "88122-453",
+    "confirmado": true
+  },
+  "contatos": {
+    "telefone": {
+      "valor": "(48) 3257-2015",
+      "confirmado": true,
+      "rotulo": "Financeiro"
+    },
+    "whatsapp": {
+      "valor": "(48) 99981-0707",
+      "confirmado": true,
+      "rotulo": "Vendas"
+    },
+    "email": {
+      "valor": "vendas@escadasmunarim.com.br",
+      "confirmado": false
+    },
+    "horario": "Segunda a sexta, 7h30 às 17h30",
+    "whatsappAtendimento": {
+      "valor": "(48) 99977-5171",
+      "confirmado": true,
+      "rotulo": "Atendimento geral"
+    }
+  },
+  "redes": {
+    "facebook": "https://www.facebook.com/escadas.munarim/",
+    "instagram": "https://www.instagram.com/escadasmunarim/",
+    "youtube": "https://www.youtube.com/channel/UCdg7zDl8sQ_RrHIXhOH3tbg",
+    "linkedin": "https://www.linkedin.com/in/escadas-munarim-14452314a/",
+    "pinterest": "https://br.pinterest.com/emunarim/",
+    "twitter": "https://twitter.com/EscadasMunarim",
+    "avaliarGoogle": null,
+    "mapa": "https://www.google.com/maps/dir/-27.5975054,-48.6489143/escadas+munarim/@-27.6016357,-48.6508157,16z"
+  },
+  "regiaoAtendida": {
+    "sede": "São José/SC",
+    "atende": [
+      "SC",
+      "PR",
+      "RS"
+    ],
+    "entregaEInstalacaoConfirmadas": false,
+    "observacoes": null
+  },
+  "diferenciais": [],
+  "numeros": {
+    "anosDeMercado": null,
+    "escadasEntregues": null,
+    "obrasRealizadas": null
+  },
+  "depoimentos": []
+}

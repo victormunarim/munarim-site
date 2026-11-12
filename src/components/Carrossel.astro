@@ -1,0 +1,193 @@
+---
+interface Props {
+	fotos: { src: string; nome: string }[];
+	verTodas?: string;
+}
+const { fotos, verTodas } = Astro.props;
+const total = fotos.length;
+---
+
+<section
+	class="carrossel"
+	data-carrossel
+	role="region"
+	aria-roledescription="carrossel"
+	aria-label="Fotos de escadas instaladas"
+>
+	<ul class="pista" data-pista>
+		{fotos.map((f, i) => (
+			<li class="slide" aria-label={`Foto ${i + 1} de ${total}`}>
+				<img class="fundo" src={f.src} alt="" aria-hidden="true" loading="lazy" />
+				<img
+					class="foto"
+					src={f.src}
+					alt={`Escada ${f.nome} instalada, foto ${i + 1} de ${total}`}
+					loading={i === 0 ? 'eager' : 'lazy'}
+					decoding="async"
+				/>
+			</li>
+		))}
+		{verTodas && (
+			<li class="slide slide-fim" aria-label="Ver todas as fotos">
+				<a class="btn" href={verTodas}>
+					Ver todas as {total} fotos
+				</a>
+			</li>
+		)}
+	</ul>
+	<button type="button" class="seta ant" data-ant aria-label="Foto anterior">
+		‹
+	</button>
+	<button type="button" class="seta prox" data-prox aria-label="Próxima foto">
+		›
+	</button>
+	<div class="barra">
+		<p class="legenda" data-legenda aria-live="polite"></p>
+		<p class="contador">
+			<span data-pos>1</span> / {total}
+		</p>
+	</div>
+</section>
+
+<style>
+	.carrossel {
+		position: relative;
+	}
+	.pista {
+		display: flex;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.pista::-webkit-scrollbar {
+		display: none;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.pista {
+			scroll-behavior: smooth;
+		}
+	}
+	.slide {
+		position: relative;
+		flex: 0 0 100%;
+		scroll-snap-align: center;
+		height: 70vh;
+		min-height: 360px;
+		max-height: 820px;
+		overflow: hidden;
+		background: var(--ink);
+		display: grid;
+		place-items: center;
+	}
+	.fundo {
+		position: absolute;
+		inset: -10%;
+		width: 120%;
+		height: 120%;
+		object-fit: cover;
+		filter: blur(28px) brightness(0.55);
+	}
+	.foto {
+		position: relative;
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+	}
+	.slide-fim {
+		background: var(--accent);
+	}
+	.seta {
+		position: absolute;
+		top: calc(35vh);
+		transform: translateY(-50%);
+		width: 48px;
+		height: 48px;
+		border-radius: 999px;
+		border: 0;
+		background: var(--accent);
+		color: var(--accent-ink);
+		font-size: 28px;
+		line-height: 1;
+		cursor: pointer;
+	}
+	.seta:hover {
+		background: var(--ink);
+	}
+	.seta:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 2px;
+	}
+	.seta[disabled] {
+		opacity: 0.35;
+		cursor: default;
+	}
+	.ant {
+		left: 16px;
+	}
+	.prox {
+		right: 16px;
+	}
+	.barra {
+		max-width: var(--wrap);
+		margin: 0 auto;
+		padding: 10px var(--gutter) 0;
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+	.barra p {
+		margin: 0;
+	}
+	@media (max-width: 640px) {
+		.seta {
+			width: 44px;
+			height: 44px;
+		}
+	}
+</style>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-carrossel]').forEach((c) => {
+		const pista = c.querySelector<HTMLElement>('[data-pista]')!;
+		const slides = Array.from(pista.children) as HTMLElement[];
+		const ant = c.querySelector<HTMLButtonElement>('[data-ant]')!;
+		const prox = c.querySelector<HTMLButtonElement>('[data-prox]')!;
+		const pos = c.querySelector<HTMLElement>('[data-pos]')!;
+		const legenda = c.querySelector<HTMLElement>('[data-legenda]')!;
+		const nomes = Array.from(c.querySelectorAll<HTMLImageElement>('.foto')).map((i) =>
+			i.alt.replace(/ instalada.*/, ''),
+		);
+		const atual = () => Math.round(pista.scrollLeft / pista.clientWidth);
+		const ir = (i: number) => {
+			const n = Math.max(0, Math.min(slides.length - 1, i));
+			pista.scrollTo({ left: n * pista.clientWidth });
+		};
+		const atualizar = () => {
+			const i = atual();
+			pos.textContent = String(Math.min(i + 1, nomes.length));
+			legenda.textContent = nomes[i] ?? '';
+			ant.disabled = i <= 0;
+			prox.disabled = i >= slides.length - 1;
+			slides.forEach((s, k) => s.toggleAttribute('inert', k !== i));
+		};
+		ant.addEventListener('click', () => ir(atual() - 1));
+		prox.addEventListener('click', () => ir(atual() + 1));
+		c.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowLeft') {
+				e.preventDefault();
+				ir(atual() - 1);
+			}
+			if (e.key === 'ArrowRight') {
+				e.preventDefault();
+				ir(atual() + 1);
+			}
+		});
+		pista.addEventListener('scroll', () => requestAnimationFrame(atualizar), { passive: true });
+		atualizar();
+	});
+</script>

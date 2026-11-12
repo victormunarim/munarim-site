@@ -1,0 +1,198 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { empresa, whatsappLink, mensagemPadrao, publicavel, faqPronta } from '../lib/empresa';
+
+interface Props {
+	titulo: string;
+	descricao: string;
+	imagem?: string;
+}
+const { titulo, descricao, imagem = '/share.jpg' } = Astro.props;
+// Com build.format 'file' o pathname vem com .html; o endereço público não tem.
+const caminho = Astro.url.pathname.replace(/(\/index)?\.html$/, '').replace(/\/index$/, '') || '/';
+const canonical = new URL(caminho, Astro.site).href;
+const tituloCompleto = caminho === '/' ? titulo : `${titulo} | Escadas Munarim`;
+
+const wa = whatsappLink(mensagemPadrao);
+
+const temModelos = publicavel(await getCollection('modelos')).length > 0;
+const menu = [
+	...(temModelos ? [{ href: '/escadas', rotulo: 'Modelos' }] : []),
+	{ href: '/fotos', rotulo: 'Fotos' },
+	{ href: '/#como-funciona', rotulo: 'Como funciona' },
+	...(faqPronta ? [{ href: '/perguntas-frequentes', rotulo: 'Perguntas' }] : []),
+	{ href: '/sobre', rotulo: 'Sobre' },
+	{ href: '/contato', rotulo: 'Contato' },
+];
+const atual = (href: string) =>
+	href.includes('#')
+		? false
+		: Astro.url.pathname === href || Astro.url.pathname.startsWith(href + '/');
+const end = empresa.endereco;
+const wpp = empresa.contatos.whatsapp.valor;
+
+// Dados estruturados só com o que a empresa já confirmou.
+const e = empresa.endereco;
+const jsonLd: Record<string, unknown> = {
+	'@context': 'https://schema.org',
+	'@type': 'LocalBusiness',
+	name: empresa.nomeFantasia,
+	description: 'Empresa de escadas pré-moldadas de concreto sob medida em São José, SC.',
+	url: Astro.site?.href,
+	areaServed: empresa.regiaoAtendida.atende,
+};
+if (e.confirmado) {
+	jsonLd.address = {
+		'@type': 'PostalAddress',
+		streetAddress: e.rua,
+		addressLocality: e.cidade,
+		addressRegion: e.uf,
+		postalCode: e.cep,
+		addressCountry: 'BR',
+	};
+}
+if (empresa.contatos.telefone.confirmado) jsonLd.telephone = empresa.contatos.telefone.valor;
+jsonLd.sameAs = Object.entries(empresa.redes)
+	.filter(([k, v]) => k !== 'mapa' && k !== 'avaliarGoogle' && v)
+	.map(([, v]) => v);
+if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.valor;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{tituloCompleto}</title>
+		<meta name="description" content={descricao} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<meta name="theme-color" content="#284360" />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="pt_BR" />
+		<meta property="og:site_name" content="Escadas Munarim" />
+		<meta property="og:title" content={tituloCompleto} />
+		<meta property="og:description" content={descricao} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={new URL(imagem, Astro.site).href} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<a
+			href="#conteudo"
+			class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-surface focus:p-3"
+		>
+			Ir para o conteúdo
+		</a>
+
+		<header class="on-brand sticky top-0 z-40">
+			<div class="wrap flex items-center justify-between gap-4 min-h-16 py-3 relative">
+				<a href="/" aria-label="Escadas Munarim, página inicial">
+					<img
+						src="/img/logo.png"
+						alt="Escadas Munarim"
+						width="700"
+						height="156"
+						class="logo-header"
+					/>
+				</a>
+				<nav aria-label="Principal" class="hidden lg:flex gap-7 text-base ml-auto">
+					{menu.map((m) => (
+						<a
+							href={m.href}
+							class="link-nav hover:underline underline-offset-4"
+							aria-current={atual(m.href) ? 'page' : undefined}
+						>
+							{m.rotulo}
+						</a>
+					))}
+				</nav>
+				<details class="menu-mobile lg:hidden ml-auto">
+					<summary aria-label="Abrir menu" data-menu-toggle>
+						Menu
+					</summary>
+					<nav aria-label="Principal (menu)">
+						{menu.map((m) => (
+							<a href={m.href} aria-current={atual(m.href) ? 'page' : undefined}>
+								{m.rotulo}
+							</a>
+						))}
+					</nav>
+				</details>
+			</div>
+		</header>
+
+		<main id="conteudo" class="flex-1">
+			<slot />
+		</main>
+
+		<div class="barra-wa" data-barra-wa>
+			<a href={wa} class="btn btn-lg w-full" rel="noopener">
+				Pedir orçamento pelo WhatsApp
+			</a>
+		</div>
+
+		<footer class="on-brand mt-16">
+			<div class="wrap py-8 grid gap-6 text-sm md:grid-cols-[1.1fr_1.3fr_1fr_auto] md:gap-10 md:items-start">
+				<p class="muted max-w-[28ch]">Escadas pré-moldadas de concreto sob medida.</p>
+				<address class="muted not-italic">
+					{end.rua}, {end.bairro}
+					<br />
+					{end.cidade}/{end.uf}, CEP {end.cep}
+					<br />
+					{empresa.contatos.horario}
+				</address>
+				<p class="muted">
+					WhatsApp vendas:
+					<br />
+					<a class="link" href={wa} rel="noopener">
+						{wpp}
+					</a>
+				</p>
+				<nav aria-label="Rodapé" class="grid gap-2 muted md:justify-items-end">
+					{faqPronta && (
+						<a class="link" href="/perguntas-frequentes">
+							Perguntas frequentes
+						</a>
+					)}
+					<a class="link" href="/politica-de-privacidade">
+						Política de privacidade
+					</a>
+				</nav>
+			</div>
+		</footer>
+		<script>
+			// Menu mobile: rótulo acompanha o estado, Esc e clique fora fecham.
+			const menu = document.querySelector<HTMLDetailsElement>('.menu-mobile');
+			const toggle = menu?.querySelector('summary');
+			menu?.addEventListener('toggle', () => {
+				toggle?.setAttribute('aria-label', menu.open ? 'Fechar menu' : 'Abrir menu');
+			});
+			document.addEventListener('keydown', (ev) => {
+				if (ev.key === 'Escape' && menu?.open) {
+					menu.open = false;
+					toggle?.focus();
+				}
+			});
+			document.addEventListener('click', (ev) => {
+				if (menu?.open && !menu.contains(ev.target as Node)) menu.open = false;
+			});
+
+			// Barra fixa some enquanto outro CTA grande está na tela (evita dois botões iguais).
+			const barra = document.querySelector<HTMLElement>('[data-barra-wa]');
+			const ctas = document.querySelectorAll('main .btn-lg');
+			if (barra && ctas.length && 'IntersectionObserver' in window) {
+				const visiveis = new Set<Element>();
+				const obs = new IntersectionObserver((entradas) => {
+					entradas.forEach((e) =>
+						e.isIntersecting ? visiveis.add(e.target) : visiveis.delete(e.target),
+					);
+					barra.classList.toggle('barra-wa--oculta', visiveis.size > 0);
+				});
+				ctas.forEach((c) => obs.observe(c));
+			}
+		</script>
+	</body>
+</html>
