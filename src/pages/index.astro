@@ -5,12 +5,15 @@ import Pendente from '../components/Pendente.astro';
 import CtaWhatsapp from '../components/CtaWhatsapp.astro';
 import AvaliarGoogle from '../components/AvaliarGoogle.astro';
 import Carrossel from '../components/Carrossel.astro';
-import { publicavel } from '../lib/empresa';
+import { publicavel, empresa, mostrarPendentes } from '../lib/empresa';
 
 const modelos = publicavel(await getCollection('modelos'));
+const fotoHero = '/img/modelos/viga-central-01.jpg';
+// A foto do hero não se repete no carrossel.
 const fotosCarrossel = (await getCollection('modelos')).flatMap((m) =>
-	m.data.fotos.map((src) => ({ src, nome: m.data.nome })),
+	m.data.fotos.filter((src) => src !== fotoHero).map((src) => ({ src, nome: m.data.nome })),
 );
+const mostrarAvaliar = mostrarPendentes || Boolean(empresa.redes.avaliarGoogle);
 
 // Descrições só do que o cliente faz ou do que já está confirmado (fábrica em São José, pré-moldado de concreto).
 const etapas = [
@@ -39,22 +42,29 @@ const etapas = [
 	descricao="Escadas Munarim, empresa de escadas pré-moldadas de concreto sob medida em São José, SC. Envie as medidas do seu espaço e receba o orçamento pelo WhatsApp."
 >
 	<section class="hero">
-		<div class="wrap min-h-[56vh] md:min-h-[64vh] grid content-center gap-6 py-14 md:py-20 relative z-10">
-			<h1 class="max-w-3xl md:max-w-[58%]">
-				Escadas pré&#8209;moldadas de concreto sob medida
-			</h1>
-			<p class="text-lg muted max-w-lg md:max-w-[50%]">
-				A Escadas Munarim é uma empresa de escadas em São José, SC. Envie as medidas do seu
-				espaço e receba o orçamento pelo WhatsApp.
-				<Pendente texto="fato confirmado: anos de mercado" />
-			</p>
-			<div class="flex flex-wrap items-center gap-4">
-				<CtaWhatsapp />
-				<a class="link" href="#como-funciona">
-					Ver como funciona
-				</a>
+		<div class="wrap hero-grid">
+			<div class="hero-texto grid gap-6 content-center">
+				<h1 class="max-w-3xl">Escadas pré&#8209;moldadas de concreto sob medida</h1>
+				<p class="text-lg max-w-lg">
+					Fabricamos em São José, SC. Envie as medidas do seu espaço e receba o orçamento
+					pelo WhatsApp.
+					<Pendente texto="fato confirmado: anos de mercado" />
+				</p>
+				<div class="acoes flex flex-wrap items-center gap-x-6 gap-y-3">
+					<CtaWhatsapp />
+				</div>
 			</div>
-			<Pendente texto="foto de hero" />
+			<figure class="hero-figura">
+				<img
+					class="hero-foto"
+					src={fotoHero}
+					alt="Escada de concreto com degraus em balanço, instalada pela Escadas Munarim"
+					width="1600"
+					height="1200"
+					fetchpriority="high"
+					decoding="async"
+				/>
+			</figure>
 		</div>
 	</section>
 
@@ -82,24 +92,21 @@ const etapas = [
 	)}
 
 	{fotosCarrossel.length > 0 && (
-		<section id="fotos" class="wrap pt-16 scroll-mt-20">
-			<div class="flex items-end justify-between gap-4 mb-6">
-				<h2 class="text-3xl">Escadas que já instalamos</h2>
-				<a class="link" href="/fotos">
-					Ver todas ({fotosCarrossel.length})
-				</a>
+		<div id="fotos" class="fotos scroll-mt-20">
+			<div class="fotos-topo on-brand">
+				<div class="wrap">
+					<h2 id="fotos-titulo" class="text-3xl">
+						Escadas que já instalamos
+					</h2>
+				</div>
 			</div>
-		</section>
-	)}
-	{fotosCarrossel.length > 0 && (
-		<>
-			<div class="pt-2">
-				<Carrossel fotos={fotosCarrossel} verTodas="/fotos" />
+			<div class="fotos-corpo">
+				<Carrossel fotos={fotosCarrossel} verTodas="/fotos" rotulo="fotos-titulo" />
+				<div class="wrap pt-6">
+					<CtaWhatsapp rotulo="Quero uma escada assim" data-cta-carrossel />
+				</div>
 			</div>
-			<div class="wrap pt-6">
-				<CtaWhatsapp rotulo="Quero uma escada assim" />
-			</div>
-		</>
+		</div>
 	)}
 
 	<section id="como-funciona" class="wrap pt-20 scroll-mt-20">
@@ -136,9 +143,11 @@ const etapas = [
 		</div>
 	</section>
 
-	<section class="wrap pt-20">
-		<AvaliarGoogle />
-	</section>
+	{mostrarAvaliar && (
+		<section class="wrap pt-20">
+			<AvaliarGoogle />
+		</section>
+	)}
 </Base>
 
 <script>

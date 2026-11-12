@@ -1,57 +1,80 @@
 ---
+import { whatsappLink, mensagemModelo } from '../lib/empresa';
 interface Props {
 	fotos: { src: string; nome: string }[];
 	verTodas?: string;
+	rotulo?: string;
 }
-const { fotos, verTodas } = Astro.props;
+const { fotos, verTodas, rotulo } = Astro.props;
 const total = fotos.length;
 ---
 
-<section
+<div
 	class="carrossel"
 	data-carrossel
 	role="region"
 	aria-roledescription="carrossel"
-	aria-label="Fotos de escadas instaladas"
+	aria-labelledby={rotulo}
+	aria-label={rotulo ? undefined : 'Fotos de escadas instaladas'}
 >
-	<ul class="pista" data-pista>
-		{fotos.map((f, i) => (
-			<li class="slide" aria-label={`Foto ${i + 1} de ${total}`}>
-				<img class="fundo" src={f.src} alt="" aria-hidden="true" loading="lazy" />
-				<img
-					class="foto"
-					src={f.src}
-					alt={`Escada ${f.nome} instalada, foto ${i + 1} de ${total}`}
-					loading={i === 0 ? 'eager' : 'lazy'}
-					decoding="async"
-				/>
-			</li>
-		))}
-		{verTodas && (
-			<li class="slide slide-fim" aria-label="Ver todas as fotos">
-				<a class="btn" href={verTodas}>
-					Ver todas as {total} fotos
-				</a>
-			</li>
-		)}
-	</ul>
-	<button type="button" class="seta ant" data-ant aria-label="Foto anterior">
-		‹
-	</button>
-	<button type="button" class="seta prox" data-prox aria-label="Próxima foto">
-		›
-	</button>
+	<div class="palco">
+		<ul
+			class="pista"
+			data-pista
+			tabindex="0"
+			aria-label="Fotos, use as setas do teclado para navegar"
+		>
+			{fotos.map((f, i) => (
+				<li
+					class="slide"
+					aria-label={`Foto ${i + 1} de ${total}`}
+					data-wa={whatsappLink(mensagemModelo(f.nome))}
+				>
+					<img class="fundo" src={f.src} alt="" aria-hidden="true" loading="lazy" />
+					<img
+						class="foto"
+						src={f.src}
+						alt={`Escada ${f.nome} instalada`}
+						loading={i === 0 ? 'eager' : 'lazy'}
+						decoding="async"
+					/>
+				</li>
+			))}
+			{verTodas && (
+				<li class="slide slide-fim" aria-label="Ver todas as fotos">
+					<a class="btn" href={verTodas}>
+						Ver todas as {total} fotos
+					</a>
+				</li>
+			)}
+		</ul>
+		<button type="button" class="seta ant" data-ant aria-label="Foto anterior">
+			‹
+		</button>
+		<button type="button" class="seta prox" data-prox aria-label="Próxima foto">
+			›
+		</button>
+	</div>
 	<div class="barra">
 		<p class="legenda" data-legenda aria-live="polite"></p>
 		<p class="contador">
 			<span data-pos>1</span> / {total}
+			{verTodas && (
+				<a class="ver-todas link" href={verTodas}>
+					Ver todas
+				</a>
+			)}
 		</p>
 	</div>
-</section>
+</div>
 
 <style>
-	.carrossel {
+	.palco {
 		position: relative;
+	}
+	.pista:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: -3px;
 	}
 	.pista {
 		display: flex;
@@ -78,7 +101,7 @@ const total = fotos.length;
 		min-height: 360px;
 		max-height: 820px;
 		overflow: hidden;
-		background: var(--ink);
+		background: #1c2f44;
 		display: grid;
 		place-items: center;
 	}
@@ -88,7 +111,7 @@ const total = fotos.length;
 		width: 120%;
 		height: 120%;
 		object-fit: cover;
-		filter: blur(28px) brightness(0.55);
+		filter: blur(28px) brightness(0.7);
 	}
 	.foto {
 		position: relative;
@@ -101,24 +124,26 @@ const total = fotos.length;
 	}
 	.seta {
 		position: absolute;
-		top: calc(35vh);
+		top: 50%;
 		transform: translateY(-50%);
 		width: 48px;
 		height: 48px;
 		border-radius: 999px;
 		border: 0;
-		background: var(--accent);
-		color: var(--accent-ink);
+		background: #fff;
+		color: var(--accent);
+		box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
 		font-size: 28px;
 		line-height: 1;
 		cursor: pointer;
 	}
 	.seta:hover {
-		background: var(--ink);
+		background: #e4e8ec;
 	}
 	.seta:focus-visible {
 		outline: 3px solid #fff;
 		outline-offset: 2px;
+		box-shadow: 0 0 0 2px var(--accent);
 	}
 	.seta[disabled] {
 		opacity: 0.35;
@@ -143,6 +168,9 @@ const total = fotos.length;
 	.barra p {
 		margin: 0;
 	}
+	.ver-todas {
+		margin-left: 12px;
+	}
 	@media (max-width: 640px) {
 		.seta {
 			width: 44px;
@@ -162,6 +190,8 @@ const total = fotos.length;
 		const nomes = Array.from(c.querySelectorAll<HTMLImageElement>('.foto')).map((i) =>
 			i.alt.replace(/ instalada.*/, ''),
 		);
+		const cta = document.querySelector<HTMLAnchorElement>('[data-cta-carrossel]');
+		const waPadrao = cta?.href ?? '';
 		const atual = () => Math.round(pista.scrollLeft / pista.clientWidth);
 		const ir = (i: number) => {
 			const n = Math.max(0, Math.min(slides.length - 1, i));
@@ -174,6 +204,7 @@ const total = fotos.length;
 			ant.disabled = i <= 0;
 			prox.disabled = i >= slides.length - 1;
 			slides.forEach((s, k) => s.toggleAttribute('inert', k !== i));
+			if (cta) cta.href = slides[i]?.dataset.wa || waPadrao;
 		};
 		ant.addEventListener('click', () => ir(atual() - 1));
 		prox.addEventListener('click', () => ir(atual() + 1));

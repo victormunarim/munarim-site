@@ -5,9 +5,15 @@ const {
 	rotulo = 'Pedir orçamento pelo WhatsApp',
 	grande = true,
 	class: classe = '',
+	...resto
 } = Astro.props;
 ---
 
-<a href={whatsappLink(mensagem)} class:list={['btn', grande && 'btn-lg', classe]} rel="noopener">
+<a
+	href={whatsappLink(mensagem)}
+	class:list={['btn', grande && 'btn-lg', classe]}
+	rel="noopener"
+	{...resto}
+>
 	{rotulo}
 </a>

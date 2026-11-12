@@ -109,6 +109,12 @@ p {
 	text-align: center;
 	line-height: 1.15;
 }
+@media (max-width: 380px) {
+	.btn-lg {
+		padding: 0 12px;
+		font-size: 0.95rem;
+	}
+}
 @media (min-width: 640px) {
 	.btn-lg {
 		padding: 0 30px;
@@ -189,48 +195,55 @@ a.card:hover img {
 	padding-block: 6px;
 }
 
-/* hero: faixa azul com silhueta de degraus em prata */
+/* hero: fundo de concreto claro, título azul, foto grande */
 .hero {
 	position: relative;
 	overflow: hidden;
-	background: var(--accent);
-	color: var(--accent-ink);
+	background: var(--bg);
+	color: var(--accent);
 }
-.hero::after {
-	content: '';
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	height: 100%;
-	width: min(38%, 480px);
-	background: linear-gradient(165deg, #e4e8ec 0%, #aab4bf 60%, #8996a4 100%);
-	clip-path: polygon(
-		0 100%,
-		0 80%,
-		20% 80%,
-		20% 60%,
-		40% 60%,
-		40% 40%,
-		60% 40%,
-		60% 20%,
-		80% 20%,
-		80% 0,
-		100% 0,
-		100% 100%
-	);
-	display: none;
+.hero-grid {
+	display: grid;
+	gap: 32px;
+	padding-block: 32px 56px;
+}
+.hero h1 {
+	color: var(--accent);
+	font-size: clamp(3rem, 10vw, 5.5rem);
+	line-height: 0.98;
+}
+.hero-texto p {
+	color: var(--ink);
+}
+.hero-figura {
+	margin: 0;
+	animation: chega-foto 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+}
+.hero-foto {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: var(--radius);
 }
 @media (min-width: 768px) {
-	.hero::after {
-		display: block;
+	.hero-grid {
+		grid-template-columns: 1fr 1.15fr;
+		gap: 56px;
+		align-items: center;
+		padding-block: 64px 80px;
 	}
 }
-.hero .muted {
-	color: rgb(255 255 255 / 0.82);
+
+/* faixa de fotos: azul da marca, o carrossel sobe sobre ele */
+.fotos-topo {
+	background: var(--accent);
+	color: var(--accent-ink);
+	padding-block: 40px 112px;
 }
-.hero .btn {
-	background: var(--accent-ink);
-	color: var(--accent);
+.fotos-corpo {
+	margin-top: -80px;
+	position: relative;
 }
 
 /* etapas: sobem como degraus no desktop */
@@ -337,7 +350,7 @@ a.card:hover img {
 }
 
 /* ---------- movimento ----------
-   Momento principal: os degraus do hero sobem e o texto chega em sequência.
+   Momento principal: foto e texto do hero chegam em sequência.
    Etapas entram uma a uma ao rolar. Tudo parte de um estado visível. */
 @view-transition {
 	navigation: auto;
@@ -347,50 +360,34 @@ a.card:hover img {
 	animation-duration: 0.18s;
 }
 
-@keyframes degraus-sobem {
-	from {
-		clip-path: polygon(
-			0 100%,
-			0 100%,
-			20% 100%,
-			20% 100%,
-			40% 100%,
-			40% 100%,
-			60% 100%,
-			60% 100%,
-			80% 100%,
-			80% 100%,
-			100% 100%,
-			100% 100%
-		);
-	}
+.hero h1,
+.hero-texto p,
+.hero-texto .acoes {
+	animation: chega 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.hero-texto p {
+	animation-delay: 0.08s;
+}
+.hero-texto .acoes {
+	animation-delay: 0.16s;
 }
 @keyframes chega {
 	from {
 		opacity: 0;
-		transform: translateY(14px);
+		translate: 0 18px;
+	}
+}
+@keyframes chega-foto {
+	from {
+		opacity: 0;
+		translate: 0 24px;
 	}
 }
 @keyframes menu-entra {
 	from {
 		opacity: 0;
-		transform: translateY(-6px);
+		translate: 0 -6px;
 	}
-}
-
-.hero::after {
-	animation: degraus-sobem 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
-}
-.hero h1,
-.hero p,
-.hero .wrap > div {
-	animation: chega 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-.hero p {
-	animation-delay: 0.08s;
-}
-.hero .wrap > div {
-	animation-delay: 0.16s;
 }
 
 .menu-mobile[open] nav {
@@ -413,12 +410,10 @@ a.card:hover img {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.hero::after {
-		animation: none;
-	}
+	.hero-figura,
 	.hero h1,
-	.hero p,
-	.hero .wrap > div,
+	.hero-texto p,
+	.hero-texto .acoes,
 	.menu-mobile[open] nav {
 		animation-name: surge;
 		animation-duration: 0.3s;
