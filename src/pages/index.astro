@@ -69,7 +69,7 @@ const etapas = [
 	</section>
 
 	{modelos.length > 0 && (
-		<section id="modelos" class="wrap pt-16 scroll-mt-20">
+		<section id="modelos" class="wrap secao scroll-mt-20">
 			<div class="flex flex-wrap items-end justify-between gap-4">
 				<h2>Modelos</h2>
 				<a class="link" href="/escadas">
@@ -92,26 +92,22 @@ const etapas = [
 	)}
 
 	{fotosCarrossel.length > 0 && (
-		<div id="fotos" class="fotos scroll-mt-20">
-			<div class="fotos-topo on-brand">
-				<div class="wrap">
-					<h2 id="fotos-titulo" class="text-3xl">
-						Escadas que já instalamos
-					</h2>
-				</div>
+		<div id="fotos" class="fotos on-brand scroll-mt-20">
+			<div class="wrap fotos-topo">
+				<h2 id="fotos-titulo" class="text-3xl">
+					Escadas que já instalamos
+				</h2>
 			</div>
-			<div class="fotos-corpo">
-				<Carrossel fotos={fotosCarrossel} verTodas="/fotos" rotulo="fotos-titulo" />
-				<div class="wrap pt-6">
-					<CtaWhatsapp rotulo="Quero uma escada assim" data-cta-carrossel />
-				</div>
+			<Carrossel fotos={fotosCarrossel} verTodas="/fotos" rotulo="fotos-titulo" />
+			<div class="wrap fotos-fim">
+				<CtaWhatsapp rotulo="Quero uma escada assim" data-cta-carrossel />
 			</div>
 		</div>
 	)}
 
-	<section id="como-funciona" class="wrap pt-20 scroll-mt-20">
+	<section id="como-funciona" class="wrap secao scroll-mt-20">
 		<h2>Como funciona</h2>
-		<ol class="grid gap-x-6 gap-y-8 mt-10 sm:grid-cols-2 lg:grid-cols-5 lg:items-start">
+		<ol class="grid gap-x-8 gap-y-8 mt-10 sm:grid-cols-2 lg:grid-cols-5">
 			{etapas.map((e, i) => (
 				<li class="etapa" style={`--i:${i}`}>
 					<span class="etapa-n" aria-hidden="true">
@@ -124,8 +120,8 @@ const etapas = [
 		</ol>
 	</section>
 
-	<section class="wrap pt-20" aria-labelledby="pedido">
-		<div class="card p-6 md:p-10 grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
+	<section class="pedido" aria-labelledby="pedido">
+		<div class="wrap secao grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-center">
 			<div class="grid gap-4">
 				<h2 id="pedido">Para pedir o orçamento, tenha em mãos</h2>
 				<ul class="grid gap-2 list-disc pl-5 max-w-prose">
@@ -144,7 +140,7 @@ const etapas = [
 	</section>
 
 	{mostrarAvaliar && (
-		<section class="wrap pt-20">
+		<section class="wrap secao">
 			<AvaliarGoogle />
 		</section>
 	)}

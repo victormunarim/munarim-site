@@ -11,11 +11,9 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 	titulo="Fotos de escadas de concreto pré-moldadas"
 	descricao="Fotos de escadas de concreto pré-moldadas instaladas: caracol, reta, viga central e outros modelos."
 >
-	<section class="wrap pt-16 pb-2">
+	<section class="wrap secao">
 		<h1>Escadas que já instalamos</h1>
-	</section>
-	<section class="wrap py-16">
-		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+		<div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
 			{fotos.map((f) => (
 				<figure>
 					<img
@@ -26,7 +24,7 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 						height="600"
 						loading="lazy"
 					/>
-					<figcaption class="text-sm text-muted mt-1">{f.nome}</figcaption>
+					<figcaption class="text-sm text-muted mt-2">{f.nome}</figcaption>
 				</figure>
 			))}
 		</div>

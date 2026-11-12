@@ -12,7 +12,6 @@
 	--ink: #1d1f21;
 	--muted: #4f5760;
 	--line: #d0d6dc;
-	--silver: #c5ccd4;
 	--accent: #284360;
 	--accent-ink: #ffffff;
 	--radius: 6px;
@@ -235,18 +234,33 @@ a.card:hover img {
 	}
 }
 
-/* faixa de fotos: azul da marca, o carrossel sobe sobre ele */
+/* faixa de fotos: bloco azul inteiro, título, carrossel e botão dentro dele */
 .fotos-topo {
-	background: var(--accent);
-	color: var(--accent-ink);
-	padding-block: 40px 112px;
+	padding-block: 56px 28px;
 }
-.fotos-corpo {
-	margin-top: -80px;
-	position: relative;
+.fotos-fim {
+	padding-block: 28px 64px;
+}
+@media (min-width: 768px) {
+	.fotos-topo {
+		padding-block: 72px 32px;
+	}
+	.fotos-fim {
+		padding-block: 32px 80px;
+	}
 }
 
-/* etapas: sobem como degraus no desktop */
+/* ritmo vertical único entre seções */
+.secao {
+	padding-block: 64px;
+}
+@media (min-width: 768px) {
+	.secao {
+		padding-block: 88px;
+	}
+}
+
+/* etapas: numeral grande sobre régua azul */
 .etapa {
 	border-top: 3px solid var(--accent);
 	padding-top: 14px;
@@ -258,10 +272,11 @@ a.card:hover img {
 	line-height: 1;
 	color: var(--accent);
 }
-@media (min-width: 1024px) {
-	.etapa {
-		margin-top: calc((4 - var(--i)) * 1.75rem);
-	}
+
+/* pedido: faixa branca de ponta a ponta */
+.pedido {
+	background: var(--surface);
+	border-block: 1px solid var(--line);
 }
 
 /* barra fixa de orçamento no mobile */

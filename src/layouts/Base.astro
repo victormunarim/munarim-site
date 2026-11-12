@@ -1,5 +1,9 @@
 ---
 import '../styles/global.css';
+// Fontes críticas pré-carregadas: evita o texto aparecer na fonte reserva (maior) e depois encolher.
+import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
+import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
+import condensed700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
 import { getCollection } from 'astro:content';
 import { empresa, whatsappLink, mensagemPadrao, publicavel, faqPronta } from '../lib/empresa';
 
@@ -64,6 +68,9 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{[barlow400, barlow600, condensed700].map((f) => (
+			<link rel="preload" as="font" type="font/woff2" href={f} crossorigin />
+		))}
 		<title>{tituloCompleto}</title>
 		<meta name="description" content={descricao} />
 		<link rel="canonical" href={canonical} />

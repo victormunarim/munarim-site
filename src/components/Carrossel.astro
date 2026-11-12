@@ -101,17 +101,9 @@ const total = fotos.length;
 		min-height: 360px;
 		max-height: 820px;
 		overflow: hidden;
-		background: #1c2f44;
+		background: color-mix(in srgb, var(--accent) 70%, #000);
 		display: grid;
 		place-items: center;
-	}
-	.fundo {
-		position: absolute;
-		inset: -10%;
-		width: 120%;
-		height: 120%;
-		object-fit: cover;
-		filter: blur(28px) brightness(0.7);
 	}
 	.foto {
 		position: relative;
@@ -133,8 +125,9 @@ const total = fotos.length;
 		background: #fff;
 		color: var(--accent);
 		box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
-		font-size: 28px;
-		line-height: 1;
+		display: grid;
+		place-items: center;
+		padding: 0;
 		cursor: pointer;
 	}
 	.seta:hover {
@@ -163,7 +156,7 @@ const total = fotos.length;
 		justify-content: space-between;
 		gap: 16px;
 		font-size: 0.875rem;
-		color: var(--muted);
+		color: rgb(255 255 255 / 0.82);
 	}
 	.barra p {
 		margin: 0;

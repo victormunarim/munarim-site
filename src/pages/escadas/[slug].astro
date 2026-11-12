@@ -22,7 +22,7 @@ const { Content } = await render(modelo);
 		`Escada ${d.nome} pré-moldada de concreto sob medida, fabricada em São José, SC. Peça o orçamento pelo WhatsApp.`
 	}
 >
-	<section class="wrap py-16 grid gap-6">
+	<section class="wrap secao grid gap-6">
 		<a class="link w-fit text-sm" href="/escadas">
 			← Todos os modelos
 		</a>
@@ -41,7 +41,7 @@ const { Content } = await render(modelo);
 	</section>
 
 	{d.foto_principal && (
-		<section class="wrap pb-16">
+		<section class="wrap pb-12 md:pb-16">
 			<img
 				class="w-full max-h-[70vh] object-cover rounded"
 				src={d.foto_principal}
@@ -52,7 +52,7 @@ const { Content } = await render(modelo);
 	)}
 
 	{d.fotos.length > 1 && (
-		<section class="wrap pb-16">
+		<section class="wrap pb-12 md:pb-16">
 			<h2 class="text-3xl">Fotos</h2>
 			<div class="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
 				{d.fotos.map((f) => (
@@ -67,7 +67,7 @@ const { Content } = await render(modelo);
 		</section>
 	)}
 
-	<section class="wrap pb-16 grid gap-6 md:grid-cols-2">
+	<section class="wrap pb-12 md:pb-16 grid gap-6 md:grid-cols-2">
 		<div>
 			<h2 class="text-3xl">Medidas</h2>
 			{d.medidas ? <p class="mt-2">{d.medidas}</p> : <Pendente texto="medidas" />}
@@ -86,7 +86,7 @@ const { Content } = await render(modelo);
 		</div>
 	</section>
 
-	<section class="wrap pb-16 prose max-w-2xl">
+	<section class="wrap pb-12 md:pb-16 prose max-w-2xl">
 		<Content />
 	</section>
 </Base>
