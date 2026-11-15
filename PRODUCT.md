@@ -20,7 +20,7 @@ Fabricação própria em São José, SC, de escadas pré-moldadas de concreto so
 
 ## Operating Context
 
-Atendimento por WhatsApp, segunda a sexta, 7h30 às 17h30. O cliente precisa informar: altura entre pisos, largura e comprimento do vão, foto do local e cidade da obra.
+Atendimento por WhatsApp, segunda a sexta, 7h30 às 12h e 13h às 17h30. O cliente precisa informar: altura entre pisos, largura e comprimento do vão, foto do local e cidade da obra.
 
 ## Capabilities and Constraints
 
