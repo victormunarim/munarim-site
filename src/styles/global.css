@@ -191,12 +191,31 @@ a.card:hover img {
 	outline-offset: 3px;
 }
 
+/* rodapé: bloco azul com marca, contato e redes; faixa preta com copyright e crédito */
+.rodape-titulo {
+	font-size: 1.25rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+.logo-rodape {
+	height: 3rem;
+	width: auto;
+}
+.faixa-preta {
+	background: #0b0d0f;
+	color: rgb(255 255 255 / 0.72);
+}
+.faixa-preta a {
+	color: #fff;
+}
+.faixa-preta a:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: 3px;
+}
+
 /* barra superior: contato e redes, como no site atual */
 .topbar {
 	border-bottom: 1px solid rgb(255 255 255 / 0.18);
-}
-.rodape-redes {
-	border-top: 1px solid rgb(255 255 255 / 0.18);
 }
 
 /* WhatsApp de vendas no topo: só entre 420px e 640px; abaixo disso não cabe ao lado dos 5 ícones */
@@ -230,6 +249,108 @@ a.card:hover img {
 }
 .redes a:hover {
 	background: rgb(255 255 255 / 0.16);
+}
+
+/* ícone de 18px centrado em área de 44px: recua 13px para o glifo alinhar com o texto acima */
+.redes.redes-alinhada {
+	margin-left: -13px;
+}
+
+/* ícones das redes sobre fundo claro */
+.redes-claro a {
+	color: var(--accent);
+}
+.redes-claro a:hover {
+	background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* página de contato: canais em linhas separadas por régua, ícone em quadro azul */
+.canais {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 3px solid var(--accent);
+}
+.canais > li {
+	display: grid;
+	grid-template-columns: 44px 1fr;
+	gap: 16px;
+	align-items: start;
+	padding-block: 16px;
+	border-bottom: 1px solid var(--line);
+}
+.canal-icone {
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--radius);
+	background: var(--accent);
+	color: var(--accent-ink);
+}
+.canal-icone {
+	transition: filter 0.15s ease;
+}
+a.canal-icone:hover {
+	filter: brightness(1.15);
+}
+.endereco-linha {
+	display: flex;
+	align-items: flex-start;
+	gap: 4px;
+}
+/* ícone de copiar: aparece com o mouse perto (ou foco); em tela de toque fica sempre visível */
+.copiar {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 44px;
+	height: 44px;
+	margin-block: -8px;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: var(--accent);
+	cursor: pointer;
+	opacity: 0;
+	transition:
+		opacity 0.15s ease,
+		background-color 0.15s ease;
+}
+.endereco-linha:hover .copiar,
+.endereco-linha:focus-within .copiar,
+.copiar:focus-visible {
+	opacity: 1;
+}
+.copiar:hover {
+	background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+@media (hover: none) {
+	.copiar {
+		opacity: 1;
+	}
+}
+.canal-rotulo {
+	font-size: 0.875rem;
+	color: var(--muted);
+	line-height: 1.3;
+}
+.canal-valor {
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+}
+a.canal-valor,
+.link-endereco {
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-underline-offset: 4px;
+	transition: text-decoration-color 0.15s ease;
+}
+a.canal-valor:hover,
+.link-endereco:hover {
+	text-decoration-color: currentColor;
 }
 
 /* botão de orçamento no header: só no desktop (no celular vale a barra fixa) */
@@ -364,6 +485,38 @@ a.card:hover img {
 @media (max-width: 1023px) {
 	body {
 		padding-bottom: 76px;
+	}
+}
+
+/* logo + anos de mercado lado a lado, separados por uma régua fina */
+.marca {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+.anos {
+	display: none;
+	padding-left: 14px;
+	border-left: 1px solid rgb(255 255 255 / 0.35);
+	font-size: 0.8125rem;
+	line-height: 1.1;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: rgb(255 255 255 / 0.85);
+	white-space: nowrap;
+}
+.anos strong {
+	display: inline;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 1.5rem;
+	letter-spacing: 0;
+	color: #fff;
+}
+@media (min-width: 420px) {
+	.anos {
+		display: flex;
+		align-items: baseline;
+		gap: 6px;
 	}
 }
 

@@ -3,21 +3,12 @@ import Base from '../layouts/Base.astro';
 import Pendente from '../components/Pendente.astro';
 import AvaliarGoogle from '../components/AvaliarGoogle.astro';
 import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+import IconeWhatsapp from '../components/IconeWhatsapp.astro';
+import Icone from '../components/Icone.astro';
 import { empresa, whatsappLink, mensagemPadrao } from '../lib/empresa';
 
 const { endereco: e, contatos: c, redes } = empresa;
-const nomesRedes: Record<string, string> = {
-	facebook: 'Facebook',
-	instagram: 'Instagram',
-	youtube: 'YouTube',
-	linkedin: 'LinkedIn',
-	pinterest: 'Pinterest',
-	twitter: 'Twitter',
-};
-const listaRedes = Object.entries(nomesRedes).flatMap(([k, nome]) => {
-	const url = (redes as Record<string, string | null>)[k];
-	return url ? [[nome, url] as [string, string]] : [];
-});
+const tel = (n: string) => `tel:+55${n.replace(/\D/g, '')}`;
 const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`;
 ---
 
@@ -25,100 +16,116 @@ const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`
 	titulo="Contato"
 	descricao="Telefone, WhatsApp, e-mail, endereço e redes sociais da Escadas Munarim em São José, SC."
 >
-	<section class="wrap secao grid gap-10 max-w-3xl">
-		<div class="grid gap-5 justify-items-start">
-			<h1>Contato</h1>
-			<p class="text-lg max-w-xl">
-				O caminho mais rápido é o WhatsApp: envie as medidas do espaço e receba o orçamento.
-			</p>
+	<section class="wrap secao grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:items-start">
+		<div class="grid gap-8 justify-items-start">
+			<div class="grid gap-4">
+				<h1>Fale com a Munarim</h1>
+				<p class="text-lg max-w-xl">
+					O caminho mais rápido é o WhatsApp. Envie as medidas do espaço e receba o orçamento no horário
+					comercial.
+				</p>
+			</div>
 			<CtaWhatsapp />
-		</div>
 
-		<div class="grid gap-3">
-			<h2 class="text-3xl">Fale com a gente</h2>
-			<ul class="grid gap-2">
-				<li>
-					WhatsApp vendas:{' '}
-					<a
-						class="link whitespace-nowrap"
-						href={whatsappLink(mensagemPadrao)}
-						rel="noopener"
-					>
-						{c.whatsapp.valor}
-					</a>
-				</li>
-				<li>
-					WhatsApp atendimento geral:{' '}
-					<a
-						class="link whitespace-nowrap"
-						href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)}
-						rel="noopener"
-					>
-						{c.whatsappAtendimento.valor}
-					</a>
-				</li>
-				<li>
-					Telefone (financeiro):{' '}
-					<a
-						class="link whitespace-nowrap"
-						href={`tel:+55${c.telefone.valor.replace(/\D/g, '')}`}
-					>
-						{c.telefone.valor}
-					</a>
-				</li>
-				{c.email.confirmado && (
-					<li>
-						E-mail:{' '}
-						<a class="link" href={`mailto:${c.email.valor}`}>
-							{c.email.valor}
-						</a>
-					</li>
-				)}
-			</ul>
-		</div>
-
-		<div class="grid gap-3">
-			<h2 class="text-3xl">Onde estamos</h2>
-			<p>{enderecoTexto}</p>
-			<p>Horário: {c.horario ?? <Pendente texto="horário de atendimento" />}</p>
-			<div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-				<a class="link" href={redes.mapa} rel="noopener">
-					Ver no mapa
-				</a>
-				<button type="button" class="btn btn-ghost btn-sm" data-copiar={enderecoTexto}>
-					Copiar endereço
-				</button>
-				<span
-					class="text-sm text-muted"
-					role="status"
-					aria-live="polite"
-					data-copiado
-				></span>
+			<div class="pedido-lista grid gap-3 max-w-xl">
+				<h2 class="text-3xl">Para agilizar, tenha em mãos</h2>
+				<ul class="grid gap-2 list-disc pl-5">
+					<li>Altura entre o piso de baixo e o de cima.</li>
+					<li>Largura e comprimento do vão onde a escada vai ficar.</li>
+					<li>Uma foto do local e a cidade da obra.</li>
+				</ul>
 			</div>
 		</div>
 
-		<div class="grid gap-3">
-			<h2 class="text-3xl">Redes sociais</h2>
-			<ul class="flex flex-wrap gap-x-5 gap-y-2">
-				{listaRedes.map(([nome, url]) => (
+		<div class="grid gap-10">
+			<ul class="canais">
+				<li>
+					<a class="canal-icone" href={whatsappLink(mensagemPadrao)} rel="noopener" tabindex="-1" aria-hidden="true"><IconeWhatsapp size={22} /></a>
+					<div>
+						<p class="canal-rotulo">WhatsApp, vendas</p>
+						<a class="canal-valor" href={whatsappLink(mensagemPadrao)} rel="noopener">{c.whatsapp.valor}</a>
+					</div>
+				</li>
+				<li>
+					<a class="canal-icone" href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)} rel="noopener" tabindex="-1" aria-hidden="true"><IconeWhatsapp size={22} /></a>
+					<div>
+						<p class="canal-rotulo">WhatsApp, atendimento geral</p>
+						<a
+							class="canal-valor"
+							href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)}
+							rel="noopener">{c.whatsappAtendimento.valor}</a
+						>
+					</div>
+				</li>
+				<li>
+					<a class="canal-icone" href={tel(c.telefone.valor)} tabindex="-1" aria-hidden="true"><Icone nome="telefone" size={22} /></a>
+					<div>
+						<p class="canal-rotulo">Telefone, financeiro</p>
+						<a class="canal-valor" href={tel(c.telefone.valor)}>{c.telefone.valor}</a>
+					</div>
+				</li>
+				{c.email.confirmado && (
 					<li>
-						<a class="link" href={url} rel="noopener">
-							{nome}
-						</a>
+						<span class="canal-icone"><Icone nome="email" size={22} /></span>
+						<div>
+							<p class="canal-rotulo">E-mail</p>
+							<a class="canal-valor" href={`mailto:${c.email.valor}`}>{c.email.valor}</a>
+						</div>
 					</li>
-				))}
+				)}
+				<li>
+					<span class="canal-icone"><Icone nome="relogio" size={22} /></span>
+					<div>
+						<p class="canal-rotulo">Horário de atendimento</p>
+						<p class="canal-valor">
+							{c.horario ?? <Pendente texto="horário de atendimento" />}
+						</p>
+					</div>
+				</li>
+				<li>
+					<a class="canal-icone" href={redes.mapa} rel="noopener" target="_blank" tabindex="-1" aria-hidden="true"><Icone nome="local" size={22} /></a>
+					<div>
+						<p class="canal-rotulo">Fábrica e escritório</p>
+						<div class="endereco-linha">
+							<address class="canal-valor not-italic">
+								<a
+									class="link-endereco"
+									href={redes.mapa}
+									rel="noopener"
+									target="_blank"
+									title="Abrir no Google Maps"
+								>
+									{e.rua}, {e.bairro}
+									<br />
+									{e.cidade}/{e.uf}, CEP {e.cep}
+								</a>
+							</address>
+							<button
+								type="button"
+								class="copiar"
+								data-copiar={enderecoTexto}
+								aria-label="Copiar endereço"
+								title="Copiar endereço"
+							>
+								<Icone nome="copiar" size={18} />
+							</button>
+						</div>
+						<span class="text-sm text-muted" role="status" aria-live="polite" data-copiado></span>
+					</div>
+				</li>
 			</ul>
 		</div>
+	</section>
 
+	<section class="wrap empty:hidden">
 		<AvaliarGoogle />
-
 		<Pendente texto="e-mail ainda não confirmado pela empresa (conteudo/empresa.json)" />
 	</section>
 </Base>
 
 <script>
 	document.querySelectorAll<HTMLButtonElement>('[data-copiar]').forEach((b) => {
-		const aviso = b.parentElement?.querySelector<HTMLElement>('[data-copiado]');
+		const aviso = b.closest('li')?.querySelector<HTMLElement>('[data-copiado]');
 		b.addEventListener('click', async () => {
 			try {
 				await navigator.clipboard.writeText(b.dataset.copiar ?? '');

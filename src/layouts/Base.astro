@@ -5,10 +5,11 @@ import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?ur
 import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
 import condensed700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
 import { getCollection } from 'astro:content';
-import { empresa, whatsappLink, mensagemPadrao, publicavel, faqPronta } from '../lib/empresa';
+import { empresa, whatsappLink, mensagemPadrao, publicavel, faqPronta, anosDeMercado } from '../lib/empresa';
 import IconeWhatsapp from '../components/IconeWhatsapp.astro';
 import CtaWhatsapp from '../components/CtaWhatsapp.astro';
 import Redes from '../components/Redes.astro';
+import Icone from '../components/Icone.astro';
 
 interface Props {
 	titulo: string;
@@ -41,6 +42,9 @@ const telHref = `tel:+55${tel.replace(/\D/g, '')}`;
 const email = empresa.contatos.email.valor;
 const end = empresa.endereco;
 const wpp = empresa.contatos.whatsapp.valor;
+const criador = empresa.criadoPor;
+const criadorWa = criador.whatsapp ? whatsappLink('Olá! Vi o site da Escadas Munarim e quero um site assim.', criador.whatsapp) : null;
+const wppGeral = empresa.contatos.whatsappAtendimento.valor;
 
 // Dados estruturados só com o que a empresa já confirmou.
 const e = empresa.endereco;
@@ -102,13 +106,23 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 
 		<div class="topbar on-brand">
 			<div class="wrap flex items-center justify-between gap-4 min-h-9 text-[0.8125rem]">
-				<p class="hidden sm:flex gap-x-5 muted whitespace-nowrap">
-					<a class="hover:underline" href={telHref}>
-						{tel}
+				<p class="hidden sm:flex gap-x-4 lg:gap-x-5 muted whitespace-nowrap">
+					<span class="hidden md:block">
+						<a class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline" href={telHref}>
+							<Icone nome="telefone" size={14} />
+							{tel}
+						</a>
+					</span>
+					<a class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline" href={wa} rel="noopener" title="WhatsApp vendas">
+						<IconeWhatsapp size={14} />
+						{wpp}
 					</a>
-					<a class="hover:underline" href={`mailto:${email}`}>
-						{email}
-					</a>
+					<span class="hidden lg:block">
+						<a class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline" href={`mailto:${email}`}>
+							<Icone nome="email" size={14} />
+							{email}
+						</a>
+					</span>
 				</p>
 				<p class="topbar-wa muted whitespace-nowrap">
 					<a
@@ -126,15 +140,21 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 
 		<header class="on-brand sticky top-0 z-40">
 			<div class="wrap flex items-center justify-between gap-4 min-h-16 py-3 relative">
-				<a href="/" aria-label="Escadas Munarim, página inicial">
-					<img
-						src="/img/logo.png"
-						alt="Escadas Munarim"
-						width="700"
-						height="156"
-						class="logo-header"
-					/>
-				</a>
+				<div class="marca">
+					<a href="/" aria-label="Escadas Munarim, página inicial">
+						<img
+							src="/img/logo.png"
+							alt="Escadas Munarim"
+							width="700"
+							height="156"
+							class="logo-header"
+						/>
+					</a>
+					<p class="anos">
+						<strong>{anosDeMercado}</strong>
+						<span>anos</span>
+					</p>
+				</div>
 				<nav aria-label="Principal" class="hidden lg:flex gap-7 text-base ml-auto">
 					{menu.map((m) => (
 						<a
@@ -173,38 +193,74 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 			</a>
 		</div>
 
-		<footer class="on-brand mt-16">
-			<div class="wrap py-8 grid gap-6 text-sm md:grid-cols-[1.1fr_1.3fr_1fr_auto] md:gap-10 md:items-start">
-				<p class="muted max-w-[28ch]">Escadas pré-moldadas de concreto sob medida.</p>
-				<address class="muted not-italic">
-					{end.rua}, {end.bairro}
-					<br />
-					{end.cidade}/{end.uf}, CEP {end.cep}
-					<br />
-					{empresa.contatos.horario}
-				</address>
-				<p class="muted">
-					WhatsApp vendas:
-					<br />
-					<a class="link" href={wa} rel="noopener">
-						{wpp}
-					</a>
-				</p>
-				<nav aria-label="Rodapé" class="grid gap-2 muted md:justify-items-end">
-					{faqPronta && (
-						<a class="link" href="/perguntas-frequentes">
-							Perguntas frequentes
-						</a>
-					)}
-					<a class="link" href="/politica-de-privacidade">
-						Política de privacidade
-					</a>
-				</nav>
+		<footer class="rodape">
+			<div class="on-brand">
+				<div class="wrap py-12 grid gap-10 text-sm md:grid-cols-[1.3fr_1fr_auto] md:gap-14 md:items-start">
+					<div class="grid gap-4 justify-items-start">
+						<img src="/img/logo.png" alt="Escadas Munarim" width="700" height="156" class="logo-rodape" loading="lazy" />
+						<p class="muted max-w-[44ch]">
+							Escadas pré-moldadas em concreto sob medida: caracol, reta, mista, viga central,
+							viga lateral, cascata, com corrimão e guarda-corpo.
+						</p>
+						{faqPronta && (
+							<a class="link muted" href="/perguntas-frequentes">
+								Perguntas frequentes
+							</a>
+						)}
+					</div>
+
+					<div class="grid gap-3 content-start">
+						<h2 class="rodape-titulo">Contato</h2>
+						<address class="muted not-italic">
+							{end.rua}, {end.bairro}
+							<br />
+							{end.cidade}/{end.uf}, CEP {end.cep}
+						</address>
+						<ul class="grid gap-1 muted">
+							<li>
+								<a class="inline-flex items-center gap-2 hover:underline" href={telHref}>
+									<Icone nome="telefone" size={14} />
+									{tel}
+								</a>
+							</li>
+							<li>
+								<a
+									class="inline-flex items-center gap-2 hover:underline"
+									href={whatsappLink(mensagemPadrao, wppGeral)}
+									rel="noopener"
+								>
+									<IconeWhatsapp size={14} />
+									{wppGeral} (atendimento geral)
+								</a>
+							</li>
+							<li>
+								<a class="inline-flex items-center gap-2 hover:underline" href={`mailto:${email}`}>
+									<Icone nome="email" size={14} />
+									{email}
+								</a>
+							</li>
+						</ul>
+						<p class="muted">{empresa.contatos.horario}</p>
+					</div>
+
+					<div class="grid gap-3 content-start">
+						<h2 class="rodape-titulo">Redes sociais</h2>
+						<Redes class="redes-alinhada" />
+					</div>
+				</div>
 			</div>
-			<div class="rodape-redes">
-				<div class="wrap flex flex-wrap items-center justify-between gap-4 py-4 text-sm">
-					<p class="muted">Siga a Escadas Munarim</p>
-					<Redes />
+			<div class="faixa-preta">
+				<div class="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-4 text-[0.8125rem]">
+					<p>Copyright © {new Date().getFullYear()} - Escadas Munarim</p>
+					{criadorWa && (
+						<p class="inline-flex items-center gap-2">
+							Quer um site assim?
+							<a class="inline-flex items-center gap-1.5 hover:underline" href={criadorWa} rel="noopener">
+								<IconeWhatsapp size={14} />
+								{criador.whatsapp}
+							</a>
+						</p>
+					)}
 				</div>
 			</div>
 		</footer>

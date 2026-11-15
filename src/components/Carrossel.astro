@@ -47,17 +47,17 @@ const total = fotos.length;
 		<button type="button" class="seta prox" data-prox aria-label="Próxima foto">
 			›
 		</button>
-	</div>
-	<div class="barra">
-		<p class="legenda" data-legenda aria-live="polite"></p>
-		<p class="contador">
-			<span data-pos>1</span> / {total}
-			{verTodas && (
-				<a class="ver-todas link" href={verTodas}>
-					Ver todas
-				</a>
-			)}
-		</p>
+		<div class="barra">
+			<p class="legenda" data-legenda aria-live="polite"></p>
+			<p class="contador">
+				<span data-pos>1</span> / {total}
+				{verTodas && (
+					<a class="ver-todas link" href={verTodas}>
+						Ver todas
+					</a>
+				)}
+			</p>
+		</div>
 	</div>
 </div>
 
@@ -157,19 +157,34 @@ const total = fotos.length;
 	.prox {
 		right: clamp(16px, 3vw, 48px);
 	}
+	/* legenda e contador dentro da foto, no canto de baixo, sobre um degradê leve para ler bem */
 	.barra {
-		padding: 10px max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter))) 16px;
+		position: absolute;
+		inset: auto 0 0 0;
+		padding: 56px max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter))) 18px;
 		display: flex;
+		align-items: flex-end;
 		justify-content: space-between;
 		gap: 16px;
-		font-size: 0.875rem;
-		color: rgb(255 255 255 / 0.82);
+		font-size: 0.9375rem;
+		color: #fff;
+		text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+		background: linear-gradient(to top, rgb(0 0 0 / 0.55), transparent);
+		pointer-events: none;
 	}
 	.barra p {
 		margin: 0;
 	}
+	.legenda {
+		font-weight: 600;
+	}
+	.contador {
+		white-space: nowrap;
+		font-variant-numeric: tabular-nums;
+	}
 	.ver-todas {
-		margin-left: 12px;
+		margin-left: 14px;
+		pointer-events: auto;
 	}
 	@media (max-width: 640px) {
 		.seta {

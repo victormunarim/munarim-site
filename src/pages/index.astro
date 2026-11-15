@@ -5,7 +5,7 @@ import Pendente from '../components/Pendente.astro';
 import CtaWhatsapp from '../components/CtaWhatsapp.astro';
 import AvaliarGoogle from '../components/AvaliarGoogle.astro';
 import Carrossel from '../components/Carrossel.astro';
-import { publicavel, empresa, mostrarPendentes } from '../lib/empresa';
+import { publicavel, empresa, mostrarPendentes, anosDeMercado } from '../lib/empresa';
 
 const modelos = publicavel(await getCollection('modelos'));
 const fotoHero = '/img/modelos/viga-central-01.jpg';
@@ -54,7 +54,9 @@ const etapas = [
 				<p class="text-lg max-w-lg">
 					Fabricamos em São José, SC. Envie as medidas do seu espaço e receba o orçamento
 					pelo WhatsApp.
-					<Pendente texto="fato confirmado: anos de mercado" />
+				</p>
+				<p class="text-lg font-semibold">
+					{anosDeMercado} anos de mercado.
 				</p>
 				<div class="acoes flex flex-wrap items-center gap-x-6 gap-y-3">
 					<CtaWhatsapp />
