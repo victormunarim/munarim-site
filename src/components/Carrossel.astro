@@ -321,6 +321,29 @@ const total = fotos.length;
 		pista.addEventListener('pointerup', soltar);
 		pista.addEventListener('pointercancel', soltar);
 
+		// Avanço automático: pausa com mouse, foco, toque ou aba oculta; desligado com "reduzir movimento".
+		const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (n > 1 && !reduzir) {
+			let auto: number | undefined;
+			const parar = () => clearInterval(auto);
+			const iniciar = () => {
+				parar();
+				auto = window.setInterval(() => {
+					if (!document.hidden) irPara(atual() + 1);
+				}, 5000);
+			};
+			c.addEventListener('mouseenter', parar);
+			c.addEventListener('mouseleave', iniciar);
+			c.addEventListener('focusin', parar);
+			c.addEventListener('focusout', iniciar);
+			c.addEventListener('pointerdown', parar);
+			c.addEventListener('touchstart', parar, { passive: true });
+			c.addEventListener('touchend', iniciar, { passive: true });
+			ant.addEventListener('click', iniciar);
+			prox.addEventListener('click', iniciar);
+			iniciar();
+		}
+
 		window.addEventListener('resize', () => irPara(atual(), false));
 		irPara(base, false);
 		atualizar();

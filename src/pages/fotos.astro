@@ -14,7 +14,7 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 		<h1>Escadas que já instalamos</h1>
 		<div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
 			{fotos.map((f) => (
-				<figure>
+				<figure class="relative">
 					<img
 						class="w-full aspect-[4/3] object-cover rounded"
 						src={f.src}
@@ -23,9 +23,173 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 						height="600"
 						loading="lazy"
 					/>
+					<button
+						type="button"
+						class="compartilhar"
+						data-compartilhar
+						data-src={f.src}
+						data-nome={f.nome}
+						aria-label={`Compartilhar foto da escada ${f.nome}`}
+					>
+						<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+							<path d="M14 4.5v4.2C7.8 9.3 4 13.2 3 19.5c2.4-3.4 5.8-5 11-5v4.3l7-7.2z" />
+						</svg>
+					</button>
+					<span class="aviso-copiado" role="status" aria-live="polite"></span>
 					<figcaption class="text-sm text-muted mt-2">{f.nome}</figcaption>
 				</figure>
 			))}
 		</div>
 	</section>
+	<dialog class="menu-compartilhar" data-menu aria-label="Compartilhar foto">
+		<p class="menu-titulo">Compartilhar</p>
+		<ul>
+			<li><a data-rede="whatsapp" target="_blank" rel="noopener">WhatsApp</a></li>
+			<li><a data-rede="telegram" target="_blank" rel="noopener">Telegram</a></li>
+			<li><a data-rede="facebook" target="_blank" rel="noopener">Facebook</a></li>
+			<li><a data-rede="x" target="_blank" rel="noopener">X (Twitter)</a></li>
+			<li><a data-rede="email">E-mail</a></li>
+		</ul>
+		<button type="button" class="menu-fechar" data-fechar>Fechar</button>
+	</dialog>
 </Base>
+
+<style>
+	.compartilhar {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 40px;
+		height: 40px;
+		border: 0;
+		border-radius: 999px;
+		display: none;
+		place-items: center;
+		padding: 0;
+		cursor: pointer;
+		color: #fff;
+		background: rgb(0 0 0 / 0.2);
+		transition: background-color 0.18s;
+	}
+	/* só em aparelhos de toque (celular e tablet) */
+	@media (pointer: coarse) {
+		.compartilhar {
+			display: grid;
+		}
+	}
+	.compartilhar:hover {
+		background: rgb(0 0 0 / 0.5);
+	}
+	.compartilhar:focus-visible {
+		outline: 3px solid #fff;
+		outline-offset: 2px;
+		box-shadow: 0 0 0 2px var(--accent);
+	}
+	.aviso-copiado {
+		position: absolute;
+		top: 56px;
+		right: 10px;
+		padding: 4px 10px;
+		border-radius: 999px;
+		font-size: 0.8125rem;
+		color: #fff;
+		background: rgb(0 0 0 / 0.7);
+		pointer-events: none;
+	}
+	.aviso-copiado:empty {
+		display: none;
+	}
+	.menu-compartilhar {
+		margin: auto;
+		padding: 20px;
+		width: min(320px, calc(100% - 32px));
+		border: 0;
+		border-radius: 8px;
+		background: #fff;
+		color: var(--ink);
+		box-shadow: 0 10px 40px rgb(0 0 0 / 0.35);
+	}
+	.menu-compartilhar::backdrop {
+		background: rgb(0 0 0 / 0.5);
+	}
+	.menu-titulo {
+		margin: 0 0 12px;
+		font-weight: 700;
+	}
+	.menu-compartilhar ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.menu-compartilhar li a {
+		display: block;
+		padding: 12px 8px;
+		border-bottom: 1px solid var(--line);
+		color: inherit;
+		text-decoration: none;
+	}
+	.menu-compartilhar li a:hover {
+		background: var(--bg);
+	}
+	.menu-fechar {
+		margin-top: 14px;
+		width: 100%;
+		padding: 10px;
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		background: transparent;
+		cursor: pointer;
+	}
+</style>
+
+<script>
+	const menu = document.querySelector<HTMLDialogElement>('[data-menu]')!;
+	const abrirMenu = (titulo: string, url: string) => {
+		const txt = encodeURIComponent(titulo);
+		const u = encodeURIComponent(url);
+		const links: Record<string, string> = {
+			whatsapp: `https://wa.me/?text=${txt}%0A${u}`,
+			telegram: `https://t.me/share/url?url=${u}&text=${txt}`,
+			facebook: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+			x: `https://twitter.com/intent/tweet?text=${txt}&url=${u}`,
+			email: `mailto:?subject=${txt}&body=${u}`,
+		};
+		menu.querySelectorAll<HTMLAnchorElement>('[data-rede]').forEach((a) => {
+			a.href = links[a.dataset.rede!];
+		});
+		menu.showModal();
+	};
+	menu.querySelector('[data-fechar]')!.addEventListener('click', () => menu.close());
+	menu.addEventListener('click', (e) => {
+		if (e.target === menu) menu.close();
+	});
+
+	document.querySelectorAll<HTMLButtonElement>('[data-compartilhar]').forEach((btn) => {
+		const aviso = btn.parentElement!.querySelector<HTMLElement>('.aviso-copiado')!;
+		const avisar = (msg: string) => {
+			aviso.textContent = msg;
+			setTimeout(() => (aviso.textContent = ''), 2000);
+		};
+		btn.addEventListener('click', async () => {
+			const url = new URL(btn.dataset.src!, location.href).href;
+			const titulo = `Escada ${btn.dataset.nome} - Escadas Munarim`;
+			try {
+				if (navigator.canShare) {
+					const blob = await (await fetch(url)).blob();
+					const arquivo = new File([blob], url.split('/').pop()!, { type: blob.type || 'image/jpeg' });
+					if (navigator.canShare({ files: [arquivo] })) {
+						await navigator.share({ files: [arquivo], title: titulo });
+						return;
+					}
+				}
+				if (navigator.share) {
+					await navigator.share({ title: titulo, url });
+					return;
+				}
+				abrirMenu(titulo, url);
+			} catch (e) {
+				if ((e as DOMException).name !== 'AbortError') avisar('Não foi possível compartilhar');
+			}
+		});
+	});
+</script>
