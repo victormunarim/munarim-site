@@ -482,6 +482,12 @@ a.canal-valor:hover,
 		display: none;
 	}
 }
+/* botão de orçamento só no celular/tablet; no desktop ele fica no header */
+@media (min-width: 1024px) {
+	.so-mobile {
+		display: none;
+	}
+}
 @media (max-width: 1023px) {
 	body {
 		padding-bottom: 76px;

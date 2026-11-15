@@ -1,9 +1,16 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+import { fotosGaleria } from '../lib/selecao';
 
 const modelos = await getCollection('modelos');
-const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.data.nome })));
+const grupos = modelos
+	.map((m) => ({
+		nome: m.data.nome,
+		fotos: (fotosGaleria[m.data.slug] ?? []).map((src) => ({ src, nome: m.data.nome })),
+	}))
+	.filter((g) => g.fotos.length);
 ---
 
 <Base
@@ -12,33 +19,40 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 >
 	<section class="wrap secao">
 		<h1>Escadas que já instalamos</h1>
-		<div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
-			{fotos.map((f) => (
-				<figure class="relative">
-					<img
-						class="w-full aspect-[4/3] object-cover rounded"
-						src={f.src}
-						alt={`Escada ${f.nome} instalada`}
-						width="800"
-						height="600"
-						loading="lazy"
-					/>
-					<button
-						type="button"
-						class="compartilhar"
-						data-compartilhar
-						data-src={f.src}
-						data-nome={f.nome}
-						aria-label={`Compartilhar foto da escada ${f.nome}`}
-					>
-						<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-							<path d="M14 4.5v4.2C7.8 9.3 4 13.2 3 19.5c2.4-3.4 5.8-5 11-5v4.3l7-7.2z" />
-						</svg>
-					</button>
-					<span class="aviso-copiado" role="status" aria-live="polite"></span>
-					<figcaption class="text-sm text-muted mt-2">{f.nome}</figcaption>
-				</figure>
+		<div class="filtros" role="group" aria-label="Filtrar por modelo" data-filtros hidden>
+			{grupos.map((g) => (
+				<button type="button" class="filtro" data-filtro={g.nome} aria-pressed="false">{g.nome}</button>
 			))}
+		</div>
+		<div class="grid gap-4 mt-8 sm:grid-cols-2 lg:grid-cols-3">
+			{grupos.flatMap((g) => g.fotos).map((f) => (
+					<figure class="relative" data-modelo={f.nome}>
+						<img
+							class="w-full aspect-[4/3] object-cover rounded"
+							src={f.src}
+							alt={`Escada ${f.nome} instalada`}
+							width="800"
+							height="600"
+							loading="lazy"
+						/>
+						<button
+							type="button"
+							class="compartilhar"
+							data-compartilhar
+							data-src={f.src}
+							data-nome={f.nome}
+							aria-label={`Compartilhar foto da escada ${f.nome}`}
+						>
+							<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+								<path d="M14 4.5v4.2C7.8 9.3 4 13.2 3 19.5c2.4-3.4 5.8-5 11-5v4.3l7-7.2z" />
+							</svg>
+						</button>
+						<span class="aviso-copiado" role="status" aria-live="polite"></span>
+					</figure>
+			))}
+		</div>
+		<div class="mt-12 so-mobile">
+			<CtaWhatsapp />
 		</div>
 	</section>
 	<dialog class="menu-compartilhar" data-menu aria-label="Compartilhar foto">
@@ -55,6 +69,37 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 </Base>
 
 <style>
+	.filtros {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 24px;
+	}
+	.filtros[hidden] {
+		display: none;
+	}
+	.filtro {
+		min-height: 44px;
+		padding: 0 16px;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+	}
+	.filtro[aria-pressed='true'] {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+	}
+	.filtro:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: 2px;
+	}
+	[data-modelo][hidden] {
+		display: none;
+	}
 	.compartilhar {
 		position: absolute;
 		top: 10px;
@@ -143,6 +188,19 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 </style>
 
 <script>
+	const barra = document.querySelector<HTMLElement>('[data-filtros]')!;
+	barra.hidden = false;
+	const filtros = barra.querySelectorAll<HTMLButtonElement>('[data-filtro]');
+	const itens = document.querySelectorAll<HTMLElement>('[data-modelo]');
+	const aplicar = (nome: string) => {
+		filtros.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filtro === nome)));
+		itens.forEach((f) => (f.hidden = nome !== '' && f.dataset.modelo !== nome));
+	};
+	filtros.forEach((b) =>
+		b.addEventListener('click', () =>
+			aplicar(b.getAttribute('aria-pressed') === 'true' ? '' : b.dataset.filtro!),
+		),
+	);
 	const menu = document.querySelector<HTMLDialogElement>('[data-menu]')!;
 	const abrirMenu = (titulo: string, url: string) => {
 		const txt = encodeURIComponent(titulo);
