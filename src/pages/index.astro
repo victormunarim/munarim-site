@@ -41,6 +41,12 @@ const etapas = [
 	titulo="Empresa de escadas de concreto em São José, SC | Munarim"
 	descricao="Escadas Munarim, empresa de escadas pré-moldadas de concreto sob medida em São José, SC. Envie as medidas do seu espaço e receba o orçamento pelo WhatsApp."
 >
+	{fotosCarrossel.length > 0 && (
+		<div id="fotos" class="fotos on-brand scroll-mt-20">
+			<Carrossel fotos={fotosCarrossel} verTodas="/fotos" />
+		</div>
+	)}
+
 	<section class="hero">
 		<div class="wrap hero-grid">
 			<div class="hero-texto grid gap-6 content-center">
@@ -89,20 +95,6 @@ const etapas = [
 				))}
 			</div>
 		</section>
-	)}
-
-	{fotosCarrossel.length > 0 && (
-		<div id="fotos" class="fotos on-brand scroll-mt-20">
-			<div class="wrap fotos-topo">
-				<h2 id="fotos-titulo" class="text-3xl">
-					Escadas que já instalamos
-				</h2>
-			</div>
-			<Carrossel fotos={fotosCarrossel} verTodas="/fotos" rotulo="fotos-titulo" />
-			<div class="wrap fotos-fim">
-				<CtaWhatsapp rotulo="Quero uma escada assim" data-cta-carrossel />
-			</div>
-		</div>
 	)}
 
 	<section id="como-funciona" class="wrap secao scroll-mt-20">

@@ -1,27 +1,78 @@
 ---
 import Base from '../layouts/Base.astro';
-import Pendente from '../components/Pendente.astro';
 import CtaWhatsapp from '../components/CtaWhatsapp.astro';
 import { empresa } from '../lib/empresa';
 
 const e = empresa.endereco;
+const valores = [
+	'Comprometimento',
+	'Credibilidade',
+	'Eficiência e eficácia',
+	'Transparência',
+	'Melhoria contínua',
+	'Respeito aos prazos',
+	'Adaptação ao mercado',
+];
 const { instagram, youtube } = empresa.redes;
 ---
 
 <Base
-	titulo="Sobre a Escadas Munarim"
+	titulo="Nossa Empresa"
 	descricao="Fabricante de escadas pré-moldadas de concreto sob medida em São José, SC."
 >
 	<section class="wrap secao grid gap-6 max-w-3xl">
-		<h1>Sobre a Escadas Munarim</h1>
+		<h1>Nossa Empresa</h1>
 		<p class="text-lg">
-			Fabricamos escadas pré-moldadas de concreto sob medida, com produção própria em São
-			José, SC. Cada escada parte das medidas do seu espaço: você nos envia, e indicamos o
-			modelo certo.
+			Escadas Munarim, comprometimento com o cliente! Fabricamos escadas pré-moldadas de
+			concreto com projetos personalizados para residências e comércios, com produção própria
+			em São José, SC.
 		</p>
-		<p class="text-muted">
-			<Pendente texto="história, anos de mercado, fábrica e equipe, confirmados" />
+		<p>
+			Nossa equipe é qualificada, e também oferecemos revestimentos complementares. Cada
+			escada parte das medidas do seu espaço: você nos envia, e indicamos o modelo certo.
 		</p>
+
+		<div class="grid gap-6 sm:grid-cols-2 mt-4">
+			<div class="etapa">
+				<h2 class="text-3xl">Missão</h2>
+				<p class="mt-2">
+					Fabricar produtos de qualidade que superem as expectativas dos clientes.
+				</p>
+			</div>
+			<div class="etapa">
+				<h2 class="text-3xl">Visão</h2>
+				<p class="mt-2">
+					Ser reconhecida como referência no setor, com seriedade, alto padrão e bom
+					atendimento.
+				</p>
+			</div>
+		</div>
+
+		<div class="grid gap-3 mt-4">
+			<h2>Valores</h2>
+			<ul class="grid gap-1 list-disc pl-5 sm:grid-cols-2">
+				{valores.map((v) => (
+					<li>{v}</li>
+				))}
+			</ul>
+		</div>
+
+		<div class="grid gap-3 mt-4">
+			<h2>Quem atendemos</h2>
+			<p>
+				Construtoras da Grande Florianópolis, engenheiros e arquitetos, além de pessoas
+				físicas e jurídicas.
+			</p>
+		</div>
+
+		<div class="grid gap-3 mt-4">
+			<h2>O que fazemos</h2>
+			<p>
+				Escadas de concreto polido sob medida: caracol, reta, leke, mista, premium, viga
+				central, viga lateral e cascata in loco. Também trabalhamos com corrimão inox, ferro
+				galvanizado, guarda-corpo e sacada.
+			</p>
+		</div>
 
 		<div class="grid gap-3 mt-4">
 			<h2>Venha conhecer</h2>

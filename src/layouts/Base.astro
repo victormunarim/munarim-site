@@ -6,6 +6,9 @@ import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?ur
 import condensed700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
 import { getCollection } from 'astro:content';
 import { empresa, whatsappLink, mensagemPadrao, publicavel, faqPronta } from '../lib/empresa';
+import IconeWhatsapp from '../components/IconeWhatsapp.astro';
+import CtaWhatsapp from '../components/CtaWhatsapp.astro';
+import Redes from '../components/Redes.astro';
 
 interface Props {
 	titulo: string;
@@ -22,17 +25,20 @@ const wa = whatsappLink(mensagemPadrao);
 
 const temModelos = publicavel(await getCollection('modelos')).length > 0;
 const menu = [
-	...(temModelos ? [{ href: '/escadas', rotulo: 'Modelos' }] : []),
+	{ href: '/', rotulo: 'Início' },
+	...(temModelos ? [{ href: '/escadas', rotulo: 'Nossas Escadas' }] : []),
 	{ href: '/fotos', rotulo: 'Fotos' },
-	{ href: '/#como-funciona', rotulo: 'Como funciona' },
 	...(faqPronta ? [{ href: '/perguntas-frequentes', rotulo: 'Perguntas' }] : []),
-	{ href: '/sobre', rotulo: 'Sobre' },
-	{ href: '/contato', rotulo: 'Contato' },
+	{ href: '/sobre', rotulo: 'Nossa Empresa' },
+	{ href: '/contato', rotulo: 'Entre em Contato' },
 ];
 const atual = (href: string) =>
-	href.includes('#')
-		? false
-		: Astro.url.pathname === href || Astro.url.pathname.startsWith(href + '/');
+	href === '/'
+		? caminho === '/'
+		: caminho === href || caminho.startsWith(href + '/');
+const tel = empresa.contatos.telefone.valor;
+const telHref = `tel:+55${tel.replace(/\D/g, '')}`;
+const email = empresa.contatos.email.valor;
 const end = empresa.endereco;
 const wpp = empresa.contatos.whatsapp.valor;
 
@@ -94,6 +100,30 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 			Ir para o conteúdo
 		</a>
 
+		<div class="topbar on-brand">
+			<div class="wrap flex items-center justify-between gap-4 min-h-9 text-[0.8125rem]">
+				<p class="hidden sm:flex gap-x-5 muted whitespace-nowrap">
+					<a class="hover:underline" href={telHref}>
+						{tel}
+					</a>
+					<a class="hover:underline" href={`mailto:${email}`}>
+						{email}
+					</a>
+				</p>
+				<p class="topbar-wa muted whitespace-nowrap">
+					<a
+						class="inline-flex items-center gap-1.5 whitespace-nowrap shrink-0"
+						href={wa}
+						rel="noopener"
+					>
+						<IconeWhatsapp size={14} />
+						{wpp}
+					</a>
+				</p>
+				<Redes class="ml-auto" />
+			</div>
+		</div>
+
 		<header class="on-brand sticky top-0 z-40">
 			<div class="wrap flex items-center justify-between gap-4 min-h-16 py-3 relative">
 				<a href="/" aria-label="Escadas Munarim, página inicial">
@@ -116,6 +146,7 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 						</a>
 					))}
 				</nav>
+				<CtaWhatsapp grande={false} class="cta-header" rotulo="Pedir orçamento" />
 				<details class="menu-mobile lg:hidden ml-auto">
 					<summary aria-label="Abrir menu" data-menu-toggle>
 						Menu
@@ -137,7 +168,8 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 
 		<div class="barra-wa" data-barra-wa>
 			<a href={wa} class="btn btn-lg w-full" rel="noopener">
-				Pedir orçamento pelo WhatsApp
+				<IconeWhatsapp />
+				<span>Pedir orçamento pelo WhatsApp</span>
 			</a>
 		</div>
 
@@ -168,6 +200,12 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 						Política de privacidade
 					</a>
 				</nav>
+			</div>
+			<div class="rodape-redes">
+				<div class="wrap flex flex-wrap items-center justify-between gap-4 py-4 text-sm">
+					<p class="muted">Siga a Escadas Munarim</p>
+					<Redes />
+				</div>
 			</div>
 		</footer>
 		<script>

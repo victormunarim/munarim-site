@@ -68,6 +68,7 @@ p {
 	outline-offset: 3px;
 }
 
+/* corpo com largura limitada e centralizado (inclui header, topbar e rodapé) */
 .wrap {
 	max-width: var(--wrap);
 	margin-inline: auto;
@@ -78,6 +79,7 @@ p {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: 10px;
 	min-height: 44px;
 	padding: 0 22px;
 	border-radius: var(--radius);
@@ -187,6 +189,58 @@ a.card:hover img {
 .on-brand a:focus-visible {
 	outline: 2px solid #fff;
 	outline-offset: 3px;
+}
+
+/* barra superior: contato e redes, como no site atual */
+.topbar {
+	border-bottom: 1px solid rgb(255 255 255 / 0.18);
+}
+.rodape-redes {
+	border-top: 1px solid rgb(255 255 255 / 0.18);
+}
+
+/* WhatsApp de vendas no topo: só entre 420px e 640px; abaixo disso não cabe ao lado dos 5 ícones */
+.topbar-wa {
+	display: none;
+}
+@media (min-width: 420px) and (max-width: 639px) {
+	.topbar-wa {
+		display: block;
+	}
+}
+
+/* ícones das redes */
+.redes {
+	display: flex;
+	align-items: center;
+	gap: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.redes a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-block: -4px;
+	border-radius: 999px;
+	transition: background-color 0.15s ease;
+}
+.redes a:hover {
+	background: rgb(255 255 255 / 0.16);
+}
+
+/* botão de orçamento no header: só no desktop (no celular vale a barra fixa) */
+.cta-header {
+	display: none;
+	margin-left: 28px;
+}
+@media (min-width: 1024px) {
+	.cta-header {
+		display: inline-flex;
+	}
 }
 
 /* link do menu */

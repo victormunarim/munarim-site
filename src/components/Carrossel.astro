@@ -40,13 +40,6 @@ const total = fotos.length;
 					/>
 				</li>
 			))}
-			{verTodas && (
-				<li class="slide slide-fim" aria-label="Ver todas as fotos">
-					<a class="btn" href={verTodas}>
-						Ver todas as {total} fotos
-					</a>
-				</li>
-			)}
 		</ul>
 		<button type="button" class="seta ant" data-ant aria-label="Foto anterior">
 			‹
@@ -85,6 +78,25 @@ const total = fotos.length;
 		margin: 0;
 		padding: 0;
 	}
+	.pista {
+		cursor: grab;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	.pista.arrastando {
+		cursor: grabbing;
+		scroll-snap-type: none;
+		scroll-behavior: auto;
+	}
+	.pista.sem-snap {
+		scroll-snap-type: none;
+		scroll-behavior: auto;
+	}
+	.foto,
+	.fundo {
+		-webkit-user-drag: none;
+		pointer-events: none;
+	}
 	.pista::-webkit-scrollbar {
 		display: none;
 	}
@@ -110,9 +122,6 @@ const total = fotos.length;
 		max-width: 100%;
 		max-height: 100%;
 		object-fit: contain;
-	}
-	.slide-fim {
-		background: var(--accent);
 	}
 	.seta {
 		position: absolute;
@@ -143,15 +152,13 @@ const total = fotos.length;
 		cursor: default;
 	}
 	.ant {
-		left: 16px;
+		left: clamp(16px, 3vw, 48px);
 	}
 	.prox {
-		right: 16px;
+		right: clamp(16px, 3vw, 48px);
 	}
 	.barra {
-		max-width: var(--wrap);
-		margin: 0 auto;
-		padding: 10px var(--gutter) 0;
+		padding: 10px max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter))) 16px;
 		display: flex;
 		justify-content: space-between;
 		gap: 16px;
@@ -175,43 +182,126 @@ const total = fotos.length;
 <script>
 	document.querySelectorAll<HTMLElement>('[data-carrossel]').forEach((c) => {
 		const pista = c.querySelector<HTMLElement>('[data-pista]')!;
-		const slides = Array.from(pista.children) as HTMLElement[];
+		const reais = Array.from(pista.children) as HTMLElement[];
+		const n = reais.length;
 		const ant = c.querySelector<HTMLButtonElement>('[data-ant]')!;
 		const prox = c.querySelector<HTMLButtonElement>('[data-prox]')!;
 		const pos = c.querySelector<HTMLElement>('[data-pos]')!;
 		const legenda = c.querySelector<HTMLElement>('[data-legenda]')!;
-		const nomes = Array.from(c.querySelectorAll<HTMLImageElement>('.foto')).map((i) =>
-			i.alt.replace(/ instalada.*/, ''),
+		const nomes = reais.map((s) =>
+			s.querySelector<HTMLImageElement>('.foto')!.alt.replace(/ instalada.*/, ''),
 		);
 		const cta = document.querySelector<HTMLAnchorElement>('[data-cta-carrossel]');
 		const waPadrao = cta?.href ?? '';
-		const atual = () => Math.round(pista.scrollLeft / pista.clientWidth);
-		const ir = (i: number) => {
-			const n = Math.max(0, Math.min(slides.length - 1, i));
-			pista.scrollTo({ left: n * pista.clientWidth });
+
+		// Scroll infinito: cópias antes e depois; ao parar numa cópia, salta para a equivalente do meio.
+		const loop = n > 1;
+		if (loop) {
+			const copia = () =>
+				reais.map((s) => {
+					const k = s.cloneNode(true) as HTMLElement;
+					k.setAttribute('aria-hidden', 'true');
+					k.removeAttribute('aria-label');
+					return k;
+				});
+			pista.prepend(...copia());
+			pista.append(...copia());
+		}
+		const slides = Array.from(pista.children) as HTMLElement[];
+		const base = loop ? n : 0;
+		const largura = () => pista.clientWidth;
+		const atual = () => Math.round(pista.scrollLeft / largura());
+		const semAnimar = (fn: () => void) => {
+			pista.classList.add('sem-snap');
+			fn();
+			requestAnimationFrame(() => pista.classList.remove('sem-snap'));
 		};
+		const irPara = (i: number, suave = true) => {
+			const alvo = Math.max(0, Math.min(slides.length - 1, i));
+			if (suave) pista.scrollTo({ left: alvo * largura() });
+			else semAnimar(() => (pista.scrollLeft = alvo * largura()));
+		};
+		const recentrar = () => {
+			if (!loop) return;
+			const i = atual();
+			if (i < n) irPara(i + n, false);
+			else if (i >= 2 * n) irPara(i - n, false);
+		};
+		const real = () => (((atual() - base) % n) + n) % n;
 		const atualizar = () => {
 			const i = atual();
-			pos.textContent = String(Math.min(i + 1, nomes.length));
-			legenda.textContent = nomes[i] ?? '';
-			ant.disabled = i <= 0;
-			prox.disabled = i >= slides.length - 1;
+			const r = loop ? real() : i;
+			pos.textContent = String(r + 1);
+			legenda.textContent = nomes[r] ?? '';
+			if (!loop) {
+				ant.disabled = i <= 0;
+				prox.disabled = i >= slides.length - 1;
+			}
 			slides.forEach((s, k) => s.toggleAttribute('inert', k !== i));
 			if (cta) cta.href = slides[i]?.dataset.wa || waPadrao;
 		};
-		ant.addEventListener('click', () => ir(atual() - 1));
-		prox.addEventListener('click', () => ir(atual() + 1));
+
+		ant.addEventListener('click', () => irPara(atual() - 1));
+		prox.addEventListener('click', () => irPara(atual() + 1));
 		c.addEventListener('keydown', (e) => {
 			if (e.key === 'ArrowLeft') {
 				e.preventDefault();
-				ir(atual() - 1);
+				irPara(atual() - 1);
 			}
 			if (e.key === 'ArrowRight') {
 				e.preventDefault();
-				ir(atual() + 1);
+				irPara(atual() + 1);
 			}
 		});
-		pista.addEventListener('scroll', () => requestAnimationFrame(atualizar), { passive: true });
+
+		let timer: number | undefined;
+		pista.addEventListener(
+			'scroll',
+			() => {
+				requestAnimationFrame(atualizar);
+				clearTimeout(timer);
+				timer = window.setTimeout(recentrar, 140);
+			},
+			{ passive: true },
+		);
+		pista.addEventListener('scrollend', recentrar);
+
+		// Arrastar com o mouse (toque já rola nativamente).
+		let arrastando = false;
+		let x0 = 0;
+		let s0 = 0;
+		let dx = 0;
+		pista.addEventListener('dragstart', (e) => e.preventDefault());
+		pista.addEventListener('pointerdown', (e) => {
+			if (e.pointerType !== 'mouse' || e.button !== 0) return;
+			recentrar();
+			arrastando = true;
+			x0 = e.clientX;
+			s0 = pista.scrollLeft;
+			dx = 0;
+			pista.classList.add('arrastando');
+			pista.setPointerCapture(e.pointerId);
+		});
+		pista.addEventListener('pointermove', (e) => {
+			if (!arrastando) return;
+			dx = e.clientX - x0;
+			pista.scrollLeft = s0 - dx;
+		});
+		const soltar = (e: PointerEvent) => {
+			if (!arrastando) return;
+			arrastando = false;
+			pista.releasePointerCapture(e.pointerId);
+			const w = largura();
+			const i0 = Math.round(s0 / w);
+			const passo = Math.abs(dx) > w * 0.12 ? (dx < 0 ? 1 : -1) : 0;
+			pista.classList.remove('arrastando');
+			irPara(i0 + passo);
+		};
+		pista.addEventListener('pointerup', soltar);
+		pista.addEventListener('pointercancel', soltar);
+
+		window.addEventListener('resize', () => irPara(atual(), false));
+		irPara(base, false);
 		atualizar();
 	});
 </script>
