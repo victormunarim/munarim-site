@@ -8,15 +8,15 @@ Concreto e engenharia: superfícies claras e planas, azul da marca como única c
 
 ## Cor
 
-| Token          | Valor     | Uso                                                                  |
-| -------------- | --------- | -------------------------------------------------------------------- |
+| Token          | Valor     | Uso                                                                   |
+| -------------- | --------- | --------------------------------------------------------------------- |
 | `--accent`     | `#284360` | azul do logo: topo, header, rodapé, carrossel, títulos do hero, botão |
-| `--accent-ink` | `#ffffff` | texto sobre azul                                                     |
-| `--bg`         | `#eef0f2` | fundo de página (cinza concreto)                                     |
-| `--surface`    | `#ffffff` | faixa "pedido", cards                                                |
-| `--ink`        | `#1d1f21` | texto                                                                |
-| `--muted`      | `#4f5760` | texto secundário                                                     |
-| `--line`       | `#d0d6dc` | bordas                                                               |
+| `--accent-ink` | `#ffffff` | texto sobre azul                                                      |
+| `--bg`         | `#eef0f2` | fundo de página (cinza concreto)                                      |
+| `--surface`    | `#ffffff` | faixa "pedido", cards                                                 |
+| `--ink`        | `#1d1f21` | texto                                                                 |
+| `--muted`      | `#4f5760` | texto secundário                                                      |
+| `--line`       | `#d0d6dc` | bordas                                                                |
 
 Estratégia: restrita. Um azul, neutros frios. Sem amarelo (testado e rejeitado).
 

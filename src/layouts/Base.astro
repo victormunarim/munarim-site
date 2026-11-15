@@ -5,7 +5,14 @@ import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?ur
 import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
 import condensed700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
 import { getCollection } from 'astro:content';
-import { empresa, whatsappLink, mensagemPadrao, publicavel, faqPronta, anosDeMercado } from '../lib/empresa';
+import {
+	empresa,
+	whatsappLink,
+	mensagemPadrao,
+	publicavel,
+	faqPronta,
+	anosDeMercado,
+} from '../lib/empresa';
 import IconeWhatsapp from '../components/IconeWhatsapp.astro';
 import CtaWhatsapp from '../components/CtaWhatsapp.astro';
 import Redes from '../components/Redes.astro';
@@ -35,16 +42,16 @@ const menu = [
 	{ href: '/contato', rotulo: 'Entre em Contato' },
 ];
 const atual = (href: string) =>
-	href === '/'
-		? caminho === '/'
-		: caminho === href || caminho.startsWith(href + '/');
+	href === '/' ? caminho === '/' : caminho === href || caminho.startsWith(href + '/');
 const tel = empresa.contatos.telefone.valor;
 const telHref = `tel:+55${tel.replace(/\D/g, '')}`;
 const email = empresa.contatos.email.valor;
 const end = empresa.endereco;
 const wpp = empresa.contatos.whatsapp.valor;
 const criador = empresa.criadoPor;
-const criadorWa = criador.whatsapp ? whatsappLink('Olá! Vi o site da Escadas Munarim e quero um site assim.', criador.whatsapp) : null;
+const criadorWa = criador.whatsapp
+	? whatsappLink('Olá! Vi o site da Escadas Munarim e quero um site assim.', criador.whatsapp)
+	: null;
 const wppGeral = empresa.contatos.whatsappAtendimento.valor;
 
 // Dados estruturados só com o que a empresa já confirmou.
@@ -109,17 +116,28 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 			<div class="wrap flex items-center justify-between gap-4 min-h-9 text-[0.8125rem]">
 				<p class="hidden sm:flex gap-x-4 lg:gap-x-5 muted whitespace-nowrap">
 					<span class="hidden md:block">
-						<a class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline" href={telHref}>
+						<a
+							class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline"
+							href={telHref}
+						>
 							<Icone nome="telefone" size={14} />
 							{tel}
 						</a>
 					</span>
-					<a class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline" href={wa} rel="noopener" title="WhatsApp vendas">
+					<a
+						class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline"
+						href={wa}
+						rel="noopener"
+						title="WhatsApp vendas"
+					>
 						<IconeWhatsapp size={14} />
 						{wpp}
 					</a>
 					<span class="hidden lg:block">
-						<a class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline" href={`mailto:${email}`}>
+						<a
+							class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap hover:underline"
+							href={`mailto:${email}`}
+						>
 							<Icone nome="email" size={14} />
 							{email}
 						</a>
@@ -188,22 +206,29 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 		</main>
 
 		{!semBarraWa && (
-		<div class="barra-wa" data-barra-wa>
-			<a href={wa} class="btn btn-lg w-full" rel="noopener">
-				<IconeWhatsapp />
-				<span>Pedir orçamento pelo WhatsApp</span>
-			</a>
-		</div>
+			<div class="barra-wa" data-barra-wa>
+				<a href={wa} class="btn btn-lg w-full" rel="noopener">
+					<IconeWhatsapp />
+					<span>Pedir orçamento pelo WhatsApp</span>
+				</a>
+			</div>
 		)}
 
 		<footer class="rodape">
 			<div class="on-brand">
 				<div class="wrap py-12 grid gap-10 text-sm md:grid-cols-[1.3fr_1fr_auto] md:gap-14 md:items-start">
 					<div class="grid gap-4 justify-items-start">
-						<img src="/img/logo.png" alt="Escadas Munarim" width="700" height="156" class="logo-rodape" loading="lazy" />
+						<img
+							src="/img/logo.png"
+							alt="Escadas Munarim"
+							width="700"
+							height="156"
+							class="logo-rodape"
+							loading="lazy"
+						/>
 						<p class="muted max-w-[44ch]">
-							Escadas pré-moldadas em concreto sob medida: caracol, reta, mista, viga central,
-							viga lateral, cascata, com corrimão e guarda-corpo.
+							Escadas pré-moldadas em concreto sob medida: caracol, reta, mista, viga
+							central, viga lateral, cascata, com corrimão e guarda-corpo.
 						</p>
 						{faqPronta && (
 							<a class="link muted" href="/perguntas-frequentes">
@@ -221,7 +246,10 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 						</address>
 						<ul class="grid gap-1 muted">
 							<li>
-								<a class="inline-flex items-center gap-2 hover:underline" href={telHref}>
+								<a
+									class="inline-flex items-center gap-2 hover:underline"
+									href={telHref}
+								>
 									<Icone nome="telefone" size={14} />
 									{tel}
 								</a>
@@ -237,7 +265,10 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 								</a>
 							</li>
 							<li>
-								<a class="inline-flex items-center gap-2 hover:underline" href={`mailto:${email}`}>
+								<a
+									class="inline-flex items-center gap-2 hover:underline"
+									href={`mailto:${email}`}
+								>
 									<Icone nome="email" size={14} />
 									{email}
 								</a>
@@ -258,7 +289,11 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 					{criadorWa && (
 						<p class="inline-flex items-center gap-2">
 							Quer um site assim?
-							<a class="inline-flex items-center gap-1.5 hover:underline" href={criadorWa} rel="noopener">
+							<a
+								class="inline-flex items-center gap-1.5 hover:underline"
+								href={criadorWa}
+								rel="noopener"
+							>
 								<IconeWhatsapp size={14} />
 								{criador.whatsapp}
 							</a>

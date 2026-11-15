@@ -21,8 +21,8 @@ const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`
 			<div class="grid gap-4">
 				<h1>Fale com a Munarim</h1>
 				<p class="text-lg max-w-xl">
-					O caminho mais rápido é o WhatsApp. Envie as medidas do espaço e receba o orçamento no horário
-					comercial.
+					O caminho mais rápido é o WhatsApp. Envie as medidas do espaço e receba o
+					orçamento no horário comercial.
 				</p>
 			</div>
 			<CtaWhatsapp />
@@ -40,41 +40,76 @@ const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`
 		<div class="grid gap-10">
 			<ul class="canais">
 				<li>
-					<a class="canal-icone" href={whatsappLink(mensagemPadrao)} rel="noopener" tabindex="-1" aria-hidden="true"><IconeWhatsapp size={22} /></a>
+					<a
+						class="canal-icone"
+						href={whatsappLink(mensagemPadrao)}
+						rel="noopener"
+						tabindex="-1"
+						aria-hidden="true"
+					>
+						<IconeWhatsapp size={22} />
+					</a>
 					<div>
 						<p class="canal-rotulo">WhatsApp, vendas</p>
-						<a class="canal-valor" href={whatsappLink(mensagemPadrao)} rel="noopener">{c.whatsapp.valor}</a>
+						<a class="canal-valor" href={whatsappLink(mensagemPadrao)} rel="noopener">
+							{c.whatsapp.valor}
+						</a>
 					</div>
 				</li>
 				<li>
-					<a class="canal-icone" href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)} rel="noopener" tabindex="-1" aria-hidden="true"><IconeWhatsapp size={22} /></a>
+					<a
+						class="canal-icone"
+						href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)}
+						rel="noopener"
+						tabindex="-1"
+						aria-hidden="true"
+					>
+						<IconeWhatsapp size={22} />
+					</a>
 					<div>
 						<p class="canal-rotulo">WhatsApp, atendimento geral</p>
 						<a
 							class="canal-valor"
 							href={whatsappLink(mensagemPadrao, c.whatsappAtendimento.valor)}
-							rel="noopener">{c.whatsappAtendimento.valor}</a
+							rel="noopener"
 						>
+							{c.whatsappAtendimento.valor}
+						</a>
 					</div>
 				</li>
 				<li>
-					<a class="canal-icone" href={tel(c.telefone.valor)} tabindex="-1" aria-hidden="true"><Icone nome="telefone" size={22} /></a>
+					<a
+						class="canal-icone"
+						href={tel(c.telefone.valor)}
+						tabindex="-1"
+						aria-hidden="true"
+					>
+						<Icone nome="telefone" size={22} />
+					</a>
 					<div>
 						<p class="canal-rotulo">Telefone, financeiro</p>
-						<a class="canal-valor" href={tel(c.telefone.valor)}>{c.telefone.valor}</a>
+						<a class="canal-valor" href={tel(c.telefone.valor)}>
+							{c.telefone.valor}
+						</a>
 					</div>
 				</li>
 				{c.email.confirmado && (
 					<li>
-						<span class="canal-icone"><Icone nome="email" size={22} /></span>
+						<span class="canal-icone">
+							<Icone nome="email" size={22} />
+						</span>
 						<div>
 							<p class="canal-rotulo">E-mail</p>
-							<a class="canal-valor" href={`mailto:${c.email.valor}`}>{c.email.valor}</a>
+							<a class="canal-valor" href={`mailto:${c.email.valor}`}>
+								{c.email.valor}
+							</a>
 						</div>
 					</li>
 				)}
 				<li>
-					<span class="canal-icone"><Icone nome="relogio" size={22} /></span>
+					<span class="canal-icone">
+						<Icone nome="relogio" size={22} />
+					</span>
 					<div>
 						<p class="canal-rotulo">Horário de atendimento</p>
 						<p class="canal-valor">
@@ -83,7 +118,16 @@ const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`
 					</div>
 				</li>
 				<li>
-					<a class="canal-icone" href={redes.mapa} rel="noopener" target="_blank" tabindex="-1" aria-hidden="true"><Icone nome="local" size={22} /></a>
+					<a
+						class="canal-icone"
+						href={redes.mapa}
+						rel="noopener"
+						target="_blank"
+						tabindex="-1"
+						aria-hidden="true"
+					>
+						<Icone nome="local" size={22} />
+					</a>
 					<div>
 						<p class="canal-rotulo">Fábrica e escritório</p>
 						<div class="endereco-linha">
@@ -110,7 +154,12 @@ const enderecoTexto = `${e.rua}, ${e.bairro}, ${e.cidade}/${e.uf}, CEP ${e.cep}`
 								<Icone nome="copiar" size={18} />
 							</button>
 						</div>
-						<span class="text-sm text-muted" role="status" aria-live="polite" data-copiado></span>
+						<span
+							class="text-sm text-muted"
+							role="status"
+							aria-live="polite"
+							data-copiado
+						></span>
 					</div>
 				</li>
 			</ul>
