@@ -15,8 +15,9 @@ interface Props {
 	titulo: string;
 	descricao: string;
 	imagem?: string;
+	semBarraWa?: boolean;
 }
-const { titulo, descricao, imagem = '/share.jpg' } = Astro.props;
+const { titulo, descricao, imagem = '/share.jpg', semBarraWa = false } = Astro.props;
 // Com build.format 'file' o pathname vem com .html; o endereço público não tem.
 const caminho = Astro.url.pathname.replace(/(\/index)?\.html$/, '').replace(/\/index$/, '') || '/';
 const canonical = new URL(caminho, Astro.site).href;
@@ -186,12 +187,14 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 			<slot />
 		</main>
 
+		{!semBarraWa && (
 		<div class="barra-wa" data-barra-wa>
 			<a href={wa} class="btn btn-lg w-full" rel="noopener">
 				<IconeWhatsapp />
 				<span>Pedir orçamento pelo WhatsApp</span>
 			</a>
 		</div>
+		)}
 
 		<footer class="rodape">
 			<div class="on-brand">

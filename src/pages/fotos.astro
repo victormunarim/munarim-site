@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import CtaWhatsapp from '../components/CtaWhatsapp.astro';
 
 const modelos = await getCollection('modelos');
 const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.data.nome })));
@@ -9,6 +8,7 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 
 <Base
 	titulo="Fotos de escadas de concreto pré-moldadas"
+	semBarraWa
 	descricao="Fotos de escadas de concreto pré-moldadas instaladas: caracol, reta, viga central e outros modelos."
 >
 	<section class="wrap secao">
@@ -27,9 +27,6 @@ const fotos = modelos.flatMap((m) => m.data.fotos.map((src) => ({ src, nome: m.d
 					<figcaption class="text-sm text-muted mt-2">{f.nome}</figcaption>
 				</figure>
 			))}
-		</div>
-		<div class="mt-10">
-			<CtaWhatsapp />
 		</div>
 	</section>
 </Base>
