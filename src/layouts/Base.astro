@@ -188,7 +188,11 @@ if (empresa.contatos.email.confirmado) jsonLd.email = empresa.contatos.email.val
 				<CtaWhatsapp grande={false} class="cta-header" rotulo="Pedir orçamento" />
 				<details class="menu-mobile lg:hidden ml-auto">
 					<summary aria-label="Abrir menu" data-menu-toggle>
-						Menu
+						<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+							<path class="h-topo" d="M4 6h16" />
+							<path class="h-meio" d="M4 12h16" />
+							<path class="h-base" d="M4 18h16" />
+						</svg>
 					</summary>
 					<nav aria-label="Principal (menu)">
 						{menu.map((m) => (

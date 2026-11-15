@@ -544,11 +544,11 @@ a.canal-valor:hover,
 .menu-mobile summary {
 	list-style: none;
 	cursor: pointer;
-	min-height: 40px;
+	width: 44px;
+	height: 44px;
 	display: inline-flex;
 	align-items: center;
-	padding: 0 12px;
-	font-weight: 600;
+	justify-content: center;
 	border: 1px solid rgb(255 255 255 / 0.5);
 	border-radius: var(--radius);
 }
@@ -557,6 +557,22 @@ a.canal-valor:hover,
 }
 .menu-mobile[open] summary {
 	background: rgb(255 255 255 / 0.14);
+}
+.menu-mobile summary path {
+	transform-box: fill-box;
+	transform-origin: center;
+	transition:
+		transform 0.2s ease,
+		opacity 0.2s ease;
+}
+.menu-mobile[open] .h-topo {
+	transform: translateY(6px) rotate(45deg);
+}
+.menu-mobile[open] .h-meio {
+	opacity: 0;
+}
+.menu-mobile[open] .h-base {
+	transform: translateY(-6px) rotate(-45deg);
 }
 .menu-mobile nav {
 	position: absolute;
