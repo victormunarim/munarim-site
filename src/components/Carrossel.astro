@@ -42,10 +42,10 @@ const total = fotos.length;
 			))}
 		</ul>
 		<button type="button" class="seta ant" data-ant aria-label="Foto anterior">
-			‹
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
 		</button>
 		<button type="button" class="seta prox" data-prox aria-label="Próxima foto">
-			›
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
 		</button>
 		<div class="barra">
 			<p class="legenda" data-legenda aria-live="polite"></p>
@@ -127,25 +127,31 @@ const total = fotos.length;
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
-		width: 48px;
-		height: 48px;
+		width: 40px;
+		height: 40px;
 		border-radius: 999px;
 		border: 0;
-		background: #fff;
-		color: var(--accent);
-		box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+		background: rgb(0 0 0 / 0.25);
+		color: rgb(255 255 255 / 0.85);
 		display: grid;
 		place-items: center;
 		padding: 0;
 		cursor: pointer;
+		transition:
+			background-color 0.18s,
+			color 0.18s,
+			transform 0.18s;
 	}
 	.seta:hover {
-		background: #e4e8ec;
+		background: rgb(0 0 0 / 0.55);
+		color: #fff;
+	}
+	.seta:active {
+		transform: translateY(-50%) scale(0.94);
 	}
 	.seta:focus-visible {
 		outline: 3px solid #fff;
-		outline-offset: 2px;
-		box-shadow: 0 0 0 2px var(--accent);
+		outline-offset: 3px;
 	}
 	.seta[disabled] {
 		opacity: 0.35;
@@ -188,8 +194,8 @@ const total = fotos.length;
 	}
 	@media (max-width: 640px) {
 		.seta {
-			width: 44px;
-			height: 44px;
+			width: 40px;
+			height: 40px;
 		}
 	}
 </style>
