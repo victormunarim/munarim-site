@@ -12,7 +12,6 @@ conteudo/           tudo que muda no dia a dia (textos e dados)
   redirecionamentos.csv   URLs antigas -> novas
   fotos/            fotos originais e regras (LEIAME.md)
 src/                código do site (layout, páginas, estilo)
-arquivo/            formulário e função de e-mail desativados
 public/             robots, favicon, _redirects, _headers
 scripts/            utilidades
 planos/             documentação do projeto

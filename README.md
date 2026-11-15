@@ -52,7 +52,7 @@ Mais receitas em [`planos/11-guia-de-manutencao.md`](planos/11-guia-de-manutenca
 
 ## Orçamento
 
-Só por WhatsApp: o botão do header abre a conversa com mensagem pronta (número em `conteudo/empresa.json`). Não há formulário nem função no servidor. O formulário e a função de e-mail antigos estão guardados em `arquivo/`, fora do build.
+Só por WhatsApp: o botão do header abre a conversa com mensagem pronta (número em `conteudo/empresa.json`). Não há formulário nem função no servidor.
 
 ## Publicar
 
@@ -73,7 +73,6 @@ Ainda não há repositório git nem projeto na Cloudflare. O roteiro está em [`
 ```
 conteudo/    textos e dados editáveis
 src/         layout, páginas, estilo e leitura do conteúdo
-arquivo/     formulário e função de e-mail desativados
 public/      robots, favicon, _redirects, _headers
 scripts/     utilidades (gerar redirecionamentos)
 planos/      planejamento e documentação do projeto
